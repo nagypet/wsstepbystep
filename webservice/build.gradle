@@ -1,0 +1,49 @@
+plugins {
+	id 'org.springframework.boot' version '2.4.4'
+	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+    id 'application'
+}
+apply from: '../gradle/common.gradle'
+
+
+repositories {
+	mavenCentral()
+}
+
+application {
+    mainClassName = 'hu.perit.wsstepbystep.WsstepbystepApplication'
+    // Some JVM options already set in common.gradle
+    applicationDefaultJvmArgs += ['-Xmx512m', '-Xms32m']
+}
+
+
+sourceCompatibility = 11
+
+dependencies {
+	compile project(':spvitamin-core')
+	
+    // Lombok
+    compileOnly 'org.projectlombok:lombok'
+    testCompileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+    testAnnotationProcessor 'org.projectlombok:lombok'
+
+    // Spring Boot
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+    // Swagger
+    implementation group: 'io.springfox', name: 'springfox-swagger2', version: '2.9.2'
+    implementation group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.9.2'
+
+    // apache.commons
+    implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.10'
+
+    // Slf4J
+	implementation group: 'org.slf4j', name: 'slf4j-api', version: '1.7.30'
+}
+
+test {
+	useJUnitPlatform()
+}
