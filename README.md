@@ -12,3 +12,4 @@
 * http://localhost:8080/v2/api-docs
 * OpenAPI with https://editor.swagger.io/
 
+## step04: Exception handling - ControllerAdvice annotation
