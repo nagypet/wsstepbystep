@@ -1,13 +1,18 @@
 plugins {
-	id 'org.springframework.boot' version '2.4.4'
-	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+    id 'org.springframework.boot' version '2.3.2.RELEASE'
+    id 'io.spring.dependency-management' version '1.0.9.RELEASE'
     id 'application'
+	id "com.github.ManifestClasspath" version "0.1.0-RELEASE"
 }
 apply from: '../gradle/common.gradle'
 
 
 repositories {
-	mavenCentral()
+    jcenter()
+    mavenCentral()
+    flatDir {
+        dirs '../gradle/localrepo'
+    }
 }
 
 application {
@@ -20,8 +25,9 @@ application {
 sourceCompatibility = 11
 
 dependencies {
-	compile project(':spvitamin-core')
-	
+	compile project(':spvitamin-core')		
+	compile project(':spvitamin-spring-general')
+		
     // Lombok
     compileOnly 'org.projectlombok:lombok'
     testCompileOnly 'org.projectlombok:lombok'
@@ -31,6 +37,7 @@ dependencies {
     // Spring Boot
 	implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+    
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
     // Swagger
@@ -39,6 +46,16 @@ dependencies {
 
     // apache.commons
     implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.10'
+
+    // Validation
+    implementation 'javax.validation:validation-api'
+
+	// FasterXML
+    implementation 'com.fasterxml.jackson.core:jackson-core'
+    implementation 'com.fasterxml.jackson.core:jackson-databind'
+    
+    // YAML formatting
+    implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml'
 
     // Slf4J
 	implementation group: 'org.slf4j', name: 'slf4j-api', version: '1.7.30'
