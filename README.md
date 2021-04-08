@@ -13,3 +13,5 @@
 * OpenAPI with https://editor.swagger.io/
 
 ## step04: Exception handling - ControllerAdvice annotation
+
+## step05: Admin GUI
