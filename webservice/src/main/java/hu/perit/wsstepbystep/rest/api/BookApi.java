@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
+import hu.perit.spvitamin.spring.logging.EventLogId;
 import hu.perit.wsstepbystep.rest.model.BookDTO;
 import hu.perit.wsstepbystep.rest.model.BookParams;
 import hu.perit.wsstepbystep.rest.model.ResponseUri;
@@ -33,6 +34,7 @@ public interface BookApi
         @ApiResponse(code = 500, message = "Internal server error") //
     })
     @ResponseStatus(value = HttpStatus.OK)
+    @EventLogId(eventId = 1)
     List<BookDTO> getAllBooks();
 
 
@@ -48,6 +50,7 @@ public interface BookApi
         @ApiResponse(code = 500, message = "Internal server error") //
     })
     @ResponseStatus(value = HttpStatus.OK)
+    @EventLogId(eventId = 2)
     BookDTO getBookById(@PathVariable("id") Long id);
 
 
@@ -64,6 +67,7 @@ public interface BookApi
         @ApiResponse(code = 500, message = "Internal server error") //
     })
     @ResponseStatus(value = HttpStatus.CREATED)
+    @EventLogId(eventId = 3)
     ResponseUri createBook(@RequestBody BookParams bookParams);
 
 
@@ -79,6 +83,7 @@ public interface BookApi
         @ApiResponse(code = 500, message = "Internal server error") //
     })
     @ResponseStatus(value = HttpStatus.OK)
+    @EventLogId(eventId = 4)
     void updateBook(@PathVariable("id") Long id, @RequestBody BookParams bookParams);
 
 
@@ -95,5 +100,6 @@ public interface BookApi
         @ApiResponse(code = 500, message = "Internal server error") //
     })
     @ResponseStatus(value = HttpStatus.OK)
+    @EventLogId(eventId = 5)
     void deleteBook(@PathVariable("id") Long id);
 }

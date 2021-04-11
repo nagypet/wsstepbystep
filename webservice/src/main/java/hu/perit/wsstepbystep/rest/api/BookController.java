@@ -5,9 +5,15 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import hu.perit.spvitamin.core.took.Took;
+import hu.perit.spvitamin.spring.logging.AbstractInterfaceLogger;
+import hu.perit.spvitamin.spring.security.auth.AuthorizationService;
 import hu.perit.wsstepbystep.rest.model.BookDTO;
 import hu.perit.wsstepbystep.rest.model.BookParams;
 import hu.perit.wsstepbystep.rest.model.ResponseUri;
@@ -15,8 +21,17 @@ import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @Slf4j
-public class BookController implements BookApi
+public class BookController extends AbstractInterfaceLogger implements BookApi
 {
+
+    private final AuthorizationService authorizationService;
+
+    protected BookController(HttpServletRequest httpRequest, AuthorizationService authorizationService)
+    {
+        super(httpRequest);
+        this.authorizationService = authorizationService;
+    }
+
 
     //------------------------------------------------------------------------------------------------------------------
     // getAllBooks()
@@ -24,10 +39,20 @@ public class BookController implements BookApi
     @Override
     public List<BookDTO> getAllBooks()
     {
-        log.debug("getAllBooks()");
-        List<BookDTO> books = new ArrayList<>();
-        books.add(createBookDTO());
-        return books;
+        UserDetails user = this.authorizationService.getAuthenticatedUser();
+        try (Took took = new Took())
+        {
+            this.traceIn(null, user.getUsername(), getMyMethodName(), 1, "");
+
+            List<BookDTO> books = new ArrayList<>();
+            books.add(createBookDTO());
+            return books;
+        }
+        catch (Exception ex)
+        {
+            this.traceOut(null, user.getUsername(), getMyMethodName(), 1, ex);
+            throw ex;
+        }
     }
 
 
@@ -87,5 +112,12 @@ public class BookController implements BookApi
     public void deleteBook(Long id)
     {
         log.debug(String.format("deleteBook(%d)", id));
+    }
+
+
+    @Override
+    protected String getSubsystemName()
+    {
+        return "wsstepbystep";
     }
 }
