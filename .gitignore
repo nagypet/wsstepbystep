@@ -26,8 +26,8 @@ AdminGUI/dist
 #Others
 .gradle
 build
+webservice/bin
 out
-bin
 polc
 distributions
 application-dev_private.properties
