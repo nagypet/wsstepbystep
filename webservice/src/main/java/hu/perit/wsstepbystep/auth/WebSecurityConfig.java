@@ -19,11 +19,13 @@ package hu.perit.wsstepbystep.auth;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.session.SessionManagementFilter;
 import org.springframework.util.StringUtils;
 
 import hu.perit.spvitamin.core.crypto.CryptoUtil;
@@ -92,7 +94,13 @@ public class WebSecurityConfig
         {
             SimpleHttpSecurityBuilder.newInstance(http) //
                 .scope(BookApi.BASE_URL_BOOKS + "/**") //
-                .basicAuth(Role.PUBLIC.name());
+                .authorizeRequests() //                
+                .antMatchers(HttpMethod.GET).hasAuthority(Permissions.BOOK_READ_ACCESS.name()) //
+                .anyRequest().hasAuthority(Permissions.BOOK_WRITE_ACCESS.name());
+
+            SimpleHttpSecurityBuilder.afterAuthorization(http).basicAuth();
+
+            http.addFilterAfter(new PostAuthenticationFilter(), SessionManagementFilter.class);
         }
     }
 }

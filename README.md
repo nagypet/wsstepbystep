@@ -17,3 +17,5 @@
 ## step05: Admin GUI
 
 ## step06: Security 1
+
+## step07: Security with roles and permissions
