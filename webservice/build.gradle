@@ -41,7 +41,8 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
     
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    // JJWT
+    implementation group: 'io.jsonwebtoken', name: 'jjwt', version: '0.9.1'
 
     // Swagger
     implementation group: 'io.springfox', name: 'springfox-swagger2', version: '2.9.2'
@@ -62,6 +63,8 @@ dependencies {
 
     // Slf4J
 	implementation group: 'org.slf4j', name: 'slf4j-api', version: '1.7.30'
+	
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
 test {
