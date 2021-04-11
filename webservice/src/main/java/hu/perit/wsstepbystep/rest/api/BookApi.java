@@ -2,6 +2,8 @@ package hu.perit.wsstepbystep.rest.api;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -68,7 +70,7 @@ public interface BookApi
     })
     @ResponseStatus(value = HttpStatus.CREATED)
     @EventLogId(eventId = 3)
-    ResponseUri createBook(@RequestBody BookParams bookParams);
+    ResponseUri createBook(@Valid @RequestBody BookParams bookParams);
 
 
     //------------------------------------------------------------------------------------------------------------------
@@ -84,7 +86,7 @@ public interface BookApi
     })
     @ResponseStatus(value = HttpStatus.OK)
     @EventLogId(eventId = 4)
-    void updateBook(@PathVariable("id") Long id, @RequestBody BookParams bookParams);
+    void updateBook(@PathVariable("id") Long id, @Valid @RequestBody BookParams bookParams);
 
 
     //------------------------------------------------------------------------------------------------------------------
