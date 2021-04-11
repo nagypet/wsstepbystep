@@ -26,7 +26,7 @@ set CERTFILE_LOCALHOST=%myworkdir%\client-truststore.cer
 IF EXIST %SERVER_STORENAME% DEL /F /Q %SERVER_STORENAME% 
 
 rem ============= self signed certificate for localhost
-keytool.exe -genkeypair -alias %ALIAS% -keyalg RSA -keysize 2048 -validity 3650 -dname "CN=localhost" -keypass %KEYPASS% -keystore %SERVER_STORENAME% -storepass %STOREPASS% -ext san=dns:localhost,dns:host.docker.internal,dns:webservice
+keytool.exe -genkeypair -alias %ALIAS% -keyalg RSA -keysize 2048 -validity 3650 -dname "CN=local.host" -keypass %KEYPASS% -keystore %SERVER_STORENAME% -storepass %STOREPASS% -ext san=dns:localhost,dns:host.docker.internal,dns:webservice,dns:local.host
 
 keytool.exe -exportcert -alias %ALIAS% -file %CERTFILE_LOCALHOST% -keystore %SERVER_STORENAME% -storepass %STOREPASS%
 keytool.exe -importcert -keystore %CLIENT_STORENAME% -alias %ALIAS% -file %CERTFILE_LOCALHOST% -storepass %STOREPASS% -noprompt
