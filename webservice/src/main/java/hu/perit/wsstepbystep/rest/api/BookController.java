@@ -36,8 +36,8 @@ public class BookController implements BookApi
     private BookDTO createBookDTO()
     {
         BookDTO bookDTO = new BookDTO(12L);
-        bookDTO.setAuthor("Vámos Miklós");
-        bookDTO.setTitle("Bár");
+        bookDTO.setAuthor("VÃ¡mos MiklÃ³s");
+        bookDTO.setTitle("BÃ¡r");
         bookDTO.setPages(245);
         bookDTO.setDateIssued(LocalDate.of(2012, 3, 23));
 
