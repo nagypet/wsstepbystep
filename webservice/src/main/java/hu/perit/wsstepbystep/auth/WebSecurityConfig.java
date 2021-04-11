@@ -29,7 +29,6 @@ import org.springframework.util.StringUtils;
 import hu.perit.spvitamin.core.crypto.CryptoUtil;
 import hu.perit.spvitamin.spring.config.SecurityProperties;
 import hu.perit.spvitamin.spring.config.SysConfig;
-import hu.perit.spvitamin.spring.rest.api.AuthApi;
 import hu.perit.spvitamin.spring.security.auth.SimpleHttpSecurityBuilder;
 import hu.perit.wsstepbystep.rest.api.BookApi;
 import lombok.extern.slf4j.Slf4j;
@@ -65,47 +64,35 @@ public class WebSecurityConfig
             SecurityProperties securityProperties = SysConfig.getSecurityProperties();
 
             // Admin user
+            PasswordEncoder passwordEncoder = getApplicationContext().getBean(PasswordEncoder.class);
             if (StringUtils.hasText(securityProperties.getAdminUserName()) && !"disabled".equals(securityProperties.getAdminUserName()))
             {
                 CryptoUtil crypto = new CryptoUtil();
-                PasswordEncoder passwordEncoder = getApplicationContext().getBean(PasswordEncoder.class);
                 auth.inMemoryAuthentication() //
                     .withUser(securityProperties.getAdminUserName()) //
-                    .password(passwordEncoder.encode(crypto.decrypt(SysConfig.getCryptoProperties().getSecret(),
-                        securityProperties.getAdminUserEncryptedPassword()))) //
-                    .authorities("ROLE_" + Role.ADMIN.name());
+                    .password(passwordEncoder.encode(
+                        crypto.decrypt(SysConfig.getCryptoProperties().getSecret(), securityProperties.getAdminUserEncryptedPassword()))) //
+                    .authorities("ROLE_" + Role.ADMIN.name(), "ROLE_" + Role.PUBLIC.name());
             }
             else
             {
                 log.warn("admin user is disabled!");
             }
+
+            // A public user
+            auth.inMemoryAuthentication() //
+                .withUser("user") //
+                .password(passwordEncoder.encode("user")) //
+                .authorities("ROLE_" + Role.PUBLIC.name());
         }
 
-
-        @Override
-        protected void configure(HttpSecurity http) throws Exception
-        {
-            SimpleHttpSecurityBuilder.newInstance(http) //
-                .scope(AuthApi.BASE_URL_AUTHENTICATE) //
-                .basicAuth();
-        }
-    }
-
-
-    /*
-     * ============== Order(2) =========================================================================================
-     */
-    @Configuration
-    @Order(2)
-    public static class Order2 extends WebSecurityConfigurerAdapter
-    {
 
         @Override
         protected void configure(HttpSecurity http) throws Exception
         {
             SimpleHttpSecurityBuilder.newInstance(http) //
                 .scope(BookApi.BASE_URL_BOOKS + "/**") //
-                .basicAuth(Role.ADMIN.name());
+                .basicAuth(Role.PUBLIC.name());
         }
     }
 }
