@@ -67,3 +67,5 @@
 * generating a self signed certificate
 
 ## step12: Updating the Swagger docu with authorization methods
+
+## step13: Configuring the management endpoints
