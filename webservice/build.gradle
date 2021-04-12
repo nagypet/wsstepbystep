@@ -21,6 +21,7 @@ repositories {
 
 ext {
     set('spvitaminVersion', '1.3.4-RELEASE')
+    set('springCloudVersion', "Hoxton.SR6")
 }
 
 
@@ -38,12 +39,17 @@ dependencies {
     implementation 'hu.perit.spvitamin:spvitamin-spring-server'
     implementation 'hu.perit.spvitamin:spvitamin-spring-admin'
     implementation 'hu.perit.spvitamin:spvitamin-spring-security'
+    implementation 'hu.perit.spvitamin:spvitamin-spring-cloud-feign'
+
+    compile project(':webservice-api')
 
     // Lombok
     compileOnly 'org.projectlombok:lombok'
     testCompileOnly 'org.projectlombok:lombok'
+    integtestCompileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
     testAnnotationProcessor 'org.projectlombok:lombok'
+    integtestAnnotationProcessor 'org.projectlombok:lombok'
 
     // Spring Boot
 	implementation 'org.springframework.boot:spring-boot-starter-web'
@@ -75,18 +81,33 @@ dependencies {
 	implementation group: 'org.slf4j', name: 'slf4j-api', version: '1.7.30'
 
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+    // OpenFeign
+    implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
+    implementation group: 'com.netflix.feign', name: 'feign-jackson', version: '8.18.0'
+
+    // Test framework
+    testImplementation('org.springframework.boot:spring-boot-starter-test') {
+        exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+    }
+
+    testImplementation 'org.springframework.security:spring-security-test'
 }
 
 
 dependencyManagement {
     imports {
         mavenBom "hu.perit.spvitamin:spvitamin-dependencies:${spvitaminVersion}"
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
     }
 }
 
 
 test {
 	useJUnitPlatform()
+}
+integtest {
+    useJUnitPlatform()
 }
 
 dockerImage() {
