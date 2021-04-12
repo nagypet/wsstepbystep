@@ -1,0 +1,70 @@
+#docker compose for local development
+
+version: '3.6'
+
+networks:
+    back-tier-net:
+        driver: bridge
+    db-net:
+        driver: bridge
+    monitoring:
+        driver: bridge
+
+
+services: 
+      
+  
+    #####################################################################################                 
+    postgres:
+    #####################################################################################                 
+        container_name: postgres
+        image: postgres:10.13-alpine
+        environment:
+            - POSTGRES_PASSWORD=sa
+        ports:
+            - "5432:5432"
+        volumes:
+            - postgres:/var/lib/postgresql/data
+        networks: 
+            - back-tier-net
+            - db-net
+
+
+    #####################################################################################                 
+    pgadmin:
+    #####################################################################################                 
+        container_name: pgadmin
+        #image: dpage/pgadmin4
+        image: thajeztah/pgadmin4
+        #environment:
+        #    - PGADMIN_DEFAULT_EMAIL=postgres
+        #    - PGADMIN_DEFAULT_PASSWORD=sa
+        ports:
+            - "5400:5050"
+        volumes:
+            - pgadmin:/var/lib/pgadmin:rw
+        networks: 
+            - db-net
+        #logging:
+        #    driver: none  
+      
+  
+    #####################################################################################                 
+    webservice:
+    #####################################################################################                 
+        container_name: webservice
+        image: webservice
+        environment:
+              - JAVA_OPTS=
+              - WEBSERVICE_OPTS=-Dspring.profiles.active=default
+        ports:
+            - "8080:8080"
+        networks: 
+            - back-tier-net
+            - monitoring
+        hostname: 'webservice'
+
+  
+volumes:
+    postgres:
+    pgadmin:
