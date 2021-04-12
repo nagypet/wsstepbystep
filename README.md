@@ -69,3 +69,7 @@
 ## step12: Updating the Swagger docu with authorization methods
 
 ## step13: Configuring the management endpoints
+
+## step14: Running the webservice in a docker container
+* Creating docker image as part of the build process
+* docker-compose
