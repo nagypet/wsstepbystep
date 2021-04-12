@@ -45,7 +45,8 @@ public class BookController extends AbstractInterfaceLogger implements BookApi
             this.traceIn(null, user.getUsername(), getMyMethodName(), 1, "");
 
             List<BookDTO> books = new ArrayList<>();
-            books.add(createBookDTO());
+            books.add(createBookDTO(12L));
+            books.add(createBookDTO(13L));
             return books;
         }
         catch (Exception ex)
@@ -55,10 +56,9 @@ public class BookController extends AbstractInterfaceLogger implements BookApi
         }
     }
 
-
-    private BookDTO createBookDTO()
+    private BookDTO createBookDTO(Long id)
     {
-        BookDTO bookDTO = new BookDTO(12L);
+        BookDTO bookDTO = new BookDTO(id);
         bookDTO.setAuthor("Vámos Miklós");
         bookDTO.setTitle("Bár");
         bookDTO.setPages(245);
@@ -67,7 +67,6 @@ public class BookController extends AbstractInterfaceLogger implements BookApi
         return bookDTO;
     }
 
-
     //------------------------------------------------------------------------------------------------------------------
     // getBookById
     //------------------------------------------------------------------------------------------------------------------
@@ -75,7 +74,7 @@ public class BookController extends AbstractInterfaceLogger implements BookApi
     public BookDTO getBookById(Long id)
     {
         log.debug("getBookById()");
-        return createBookDTO();
+        return createBookDTO(12L);
     }
 
 
@@ -87,9 +86,12 @@ public class BookController extends AbstractInterfaceLogger implements BookApi
     {
         log.debug(String.format("createBook(%s)", bookParams.toString()));
 
-        long newUserId = 12;
+        long newBookId = 120;
 
-        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(newUserId).toUri();
+        URI location = ServletUriComponentsBuilder //
+            .fromCurrentRequest() //
+            .path("/{id}") //
+            .buildAndExpand(newBookId).toUri();
 
         return new ResponseUri().location(location.toString());
     }
