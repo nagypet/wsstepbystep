@@ -65,3 +65,5 @@
 
 ## step11: Turning HTTPS on
 * generating a self signed certificate
+
+## step12: Updating the Swagger docu with authorization methods
