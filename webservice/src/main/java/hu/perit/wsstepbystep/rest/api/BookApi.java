@@ -21,7 +21,7 @@ import io.swagger.annotations.ApiResponses;
 public interface BookApi
 {
     String BASE_URL_BOOKS = "/books";
-
+            
     //------------------------------------------------------------------------------------------------------------------
     // getAllBooks()
     //------------------------------------------------------------------------------------------------------------------
@@ -75,7 +75,7 @@ public interface BookApi
     @ApiResponses(value = { //
         @ApiResponse(code = 200, message = "Success"), //
         @ApiResponse(code = 401, message = "Invalid credentials"), //
-        @ApiResponse(code = 404, message = "User not found"), //
+        @ApiResponse(code = 404, message = "Book not found"), //
         @ApiResponse(code = 500, message = "Internal server error") //
     })
     @ResponseStatus(value = HttpStatus.OK)
@@ -91,7 +91,7 @@ public interface BookApi
         @ApiResponse(code = 200, message = "Success"), //
         @ApiResponse(code = 400, message = "Bad request"), //
         @ApiResponse(code = 401, message = "Invalid credentials"), //
-        @ApiResponse(code = 404, message = "User not found"), //
+        @ApiResponse(code = 404, message = "Book not found"), //
         @ApiResponse(code = 500, message = "Internal server error") //
     })
     @ResponseStatus(value = HttpStatus.OK)
