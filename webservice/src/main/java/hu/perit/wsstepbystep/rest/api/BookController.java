@@ -8,6 +8,9 @@ import java.util.List;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import hu.perit.spvitamin.core.typehelpers.LongUtils;
+import hu.perit.spvitamin.spring.exception.ResourceAlreadyExistsException;
+import hu.perit.spvitamin.spring.exception.ResourceNotFoundException;
 import hu.perit.wsstepbystep.rest.model.BookDTO;
 import hu.perit.wsstepbystep.rest.model.BookParams;
 import hu.perit.wsstepbystep.rest.model.ResponseUri;
@@ -49,6 +52,12 @@ public class BookController implements BookApi
     public BookDTO getBookById(Long id)
     {
         log.debug("getBookById()");
+        
+        if (LongUtils.equals(id, 120L))
+        {
+            throw new ResourceNotFoundException("Book not found!");
+        }
+        
         return createBookDTO(12L);
     }
 
@@ -61,6 +70,11 @@ public class BookController implements BookApi
     {
         log.debug(String.format("createBook(%s)", bookParams.toString()));
 
+        if ("xxx".equals(bookParams.getAuthor()))
+        {
+            throw new ResourceAlreadyExistsException("Book already exists!");
+        }
+        
         long newBookId = 120;
 
         URI location = ServletUriComponentsBuilder //
