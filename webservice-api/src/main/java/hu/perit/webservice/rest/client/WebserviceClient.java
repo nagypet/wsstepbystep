@@ -42,7 +42,7 @@ public interface WebserviceClient
     // authenticate()
     //------------------------------------------------------------------------------------------------------------------
     @RequestLine("GET " + BASE_URL_AUTHENTICATE)
-    @Headers({"Content-Type: application/json"})
+    @Headers({"Content-Type: application/json", "processID: {processID}"})
     AuthorizationToken authenticate(@Param("processID") String processID);
 
 
