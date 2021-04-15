@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package hu.perit.template.authservice.integration;
+package hu.perit.wsstepbystep.integration;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -53,13 +53,14 @@ class AuthApiIntegrationTest
             SecurityProperties securityProperties = SysConfig.getSecurityProperties();
             CryptoUtil crypto = new CryptoUtil();
 
-            WebserviceClient templateAuthClient = SimpleFeignClientBuilder.newInstance().requestInterceptor(
-                new BasicAuthRequestInterceptor(securityProperties.getAdminUserName(),
-                    crypto.decrypt(SysConfig.getCryptoProperties().getSecret(), securityProperties.getAdminUserEncryptedPassword()))).build(
-                        WebserviceClient.class, SysConfig.getServerProperties().getServiceUrl());
+            WebserviceClient webserviceClient = SimpleFeignClientBuilder.newInstance() //
+                .requestInterceptor(new BasicAuthRequestInterceptor( //
+                    securityProperties.getAdminUserName(),
+                    crypto.decrypt(SysConfig.getCryptoProperties().getSecret(), securityProperties.getAdminUserEncryptedPassword()))) //
+                .build(WebserviceClient.class, SysConfig.getServerProperties().getServiceUrl());
 
             // Calling the authentication endpoint
-            AuthorizationToken authentication = templateAuthClient.authenticate(null);
+            AuthorizationToken authentication = webserviceClient.authenticate(null);
             log.debug(authentication.getJwt());
         }
         catch (Exception e)
@@ -76,12 +77,12 @@ class AuthApiIntegrationTest
         log.debug("-----------------------------------------------------------------------------------------------------");
         log.debug("testRestEndpoint_withIncorrectUsername_whenUsing_DaoAuthenticationProvider()");
 
-        WebserviceClient templateAuthClient = SimpleFeignClientBuilder.newInstance().requestInterceptor(
+        WebserviceClient webserviceClient = SimpleFeignClientBuilder.newInstance().requestInterceptor(
             new BasicAuthRequestInterceptor("valami_nem_letezo_username", "password")).build(WebserviceClient.class,
                 SysConfig.getServerProperties().getServiceUrl());
 
         // Calling the authentication endpoint
-        Assertions.assertThrows(BadCredentialsException.class, () -> templateAuthClient.authenticate(null));
+        Assertions.assertThrows(BadCredentialsException.class, () -> webserviceClient.authenticate(null));
     }
 
 
@@ -91,12 +92,12 @@ class AuthApiIntegrationTest
         log.debug("-----------------------------------------------------------------------------------------------------");
         log.debug("testRestEndpoint_withIncorrectPassword_whenUsing_DaoAuthenticationProvider()");
 
-        WebserviceClient templateAuthClient = SimpleFeignClientBuilder.newInstance().requestInterceptor(
+        WebserviceClient webserviceClient = SimpleFeignClientBuilder.newInstance().requestInterceptor(
             new BasicAuthRequestInterceptor("admin", "wrong_password")).build(WebserviceClient.class,
                 SysConfig.getServerProperties().getServiceUrl());
 
         // Calling the authentication endpoint
-        Assertions.assertThrows(BadCredentialsException.class, () -> templateAuthClient.authenticate(null));
+        Assertions.assertThrows(BadCredentialsException.class, () -> webserviceClient.authenticate(null));
     }
 
 }

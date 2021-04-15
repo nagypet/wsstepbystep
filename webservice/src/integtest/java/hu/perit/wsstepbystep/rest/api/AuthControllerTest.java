@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package hu.perit.template.authservice.rest.api;
+package hu.perit.wsstepbystep.rest.api;
 
 import java.util.List;
 
@@ -32,7 +32,6 @@ import hu.perit.spvitamin.spring.auth.AuthorizationToken;
 import hu.perit.spvitamin.spring.security.AuthenticatedUser;
 import hu.perit.spvitamin.spring.security.auth.jwt.JwtTokenProvider;
 import hu.perit.wsstepbystep.auth.Role;
-import hu.perit.wsstepbystep.rest.api.AuthController;
 import io.jsonwebtoken.Claims;
 import lombok.extern.slf4j.Slf4j;
 
@@ -47,7 +46,7 @@ class AuthControllerTest
 {
 
     @Autowired
-    private AuthController authApiController;
+    private AuthController authController;
 
     @Autowired
     private JwtTokenProvider jwtTokenProvider;
@@ -69,7 +68,7 @@ class AuthControllerTest
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         // Meghívjuk a REST controllert
-        AuthorizationToken authorizationToken = this.authApiController.authenticateUsingGET("123");
+        AuthorizationToken authorizationToken = this.authController.authenticateUsingGET("123");
         log.debug(authorizationToken.getJwt());
 
         Claims claims = this.jwtTokenProvider.getClaims(authorizationToken.getJwt());

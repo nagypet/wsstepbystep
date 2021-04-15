@@ -80,8 +80,6 @@ dependencies {
     // Slf4J
 	implementation group: 'org.slf4j', name: 'slf4j-api', version: '1.7.30'
 
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-
     // OpenFeign
     implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
     implementation group: 'com.netflix.feign', name: 'feign-jackson', version: '8.18.0'
