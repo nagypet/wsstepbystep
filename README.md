@@ -75,5 +75,6 @@
 * docker-compose
 
 ## step15: Integration test
+* Testing the AuthController with @SpringBootTest
 * Creating a webservice client interface with Spring Cloud Feign, to programmatically invoke the REST endpoints
 * Testing the client interface with an integration test
