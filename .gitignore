@@ -27,6 +27,7 @@ AdminGUI/dist
 .gradle
 build
 webservice/bin
+webservice-api/bin
 out
 polc
 distributions
