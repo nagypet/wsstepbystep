@@ -37,6 +37,7 @@ dependencies {
 	compile project(':spvitamin-spring-admin')
 	compile project(':spvitamin-spring-security')
 	compile project(':spvitamin-spring-cloud-feign')
+	compile project(':spvitamin-spring-data')
 	compile project(':webservice-api')
 		
     // Lombok
@@ -52,6 +53,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     
     // JJWT
     implementation group: 'io.jsonwebtoken', name: 'jjwt', version: '0.9.1'
@@ -76,6 +78,12 @@ dependencies {
     // OpenFeign
     implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
     implementation group: 'com.netflix.feign', name: 'feign-jackson', version: '8.18.0'
+
+    // ModelMapper
+    implementation group: 'org.modelmapper.extensions', name: 'modelmapper-spring', version: '2.3.5'
+
+    // PostgreSQL
+    runtimeOnly 'org.postgresql:postgresql'
 
     // Test framework
     testImplementation('org.springframework.boot:spring-boot-starter-test') {
