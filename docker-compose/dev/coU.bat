@@ -20,9 +20,13 @@ setlocal enabledelayedexpansion
 
 if "%1"=="" goto print_usage
 
+SET DB=0
 SET SERVICES=0
 SET MONITORING=0
 for %%x in (%*) do (	
+	if /I "%%~x"=="--db" (
+		set DB=1
+	)
 	if /I "%%~x"=="--svc" (
 		set SERVICES=1
 	)
@@ -37,11 +41,18 @@ for %%x in (%*) do (
 
 IF !SERVICES!==0 (
 	IF !MONITORING!==0 (
-		for %%x in (%*) do (	
-			docker-compose up -d %%~x
+		IF !DB!==0 (
+			for %%x in (%*) do (	
+				docker-compose up -d %%~x
+			)
+			goto end
 		)
-		goto end
 	)
+)
+
+IF !DB!==1 (
+	docker-compose up -d postgres
+	docker-compose up -d pgadmin
 )
 
 IF !SERVICES!==1 (
@@ -62,6 +73,7 @@ goto end
 :print_usage
 echo usage: coU options container-name
 echo   "options"
+echo     --db: only database
 echo     --svc: only services
 echo     --mon: only monitoring
 echo     --all: each containers

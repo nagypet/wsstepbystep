@@ -24,7 +24,7 @@ services:
         ports:
             - "5432:5432"
         volumes:
-            - postgres:/var/lib/postgresql/data
+            - wsstepbystep_postgres:/var/lib/postgresql/data
         networks: 
             - back-tier-net
             - db-net
@@ -42,7 +42,7 @@ services:
         ports:
             - "5400:5050"
         volumes:
-            - pgadmin:/var/lib/pgadmin:rw
+            - wsstepbystep_pgadmin:/var/lib/pgadmin:rw
         networks: 
             - db-net
         #logging:
@@ -66,5 +66,5 @@ services:
 
   
 volumes:
-    postgres:
-    pgadmin:
+    wsstepbystep_postgres:
+    wsstepbystep_pgadmin:

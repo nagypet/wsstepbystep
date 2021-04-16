@@ -1,23 +1,21 @@
 package hu.perit.wsstepbystep.rest.api;
 
-import java.net.URI;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-
+import hu.perit.spvitamin.core.took.Took;
+import hu.perit.spvitamin.spring.logging.AbstractInterfaceLogger;
+import hu.perit.spvitamin.spring.security.auth.AuthorizationService;
+import hu.perit.webservice.rest.model.BookDTO;
+import hu.perit.wsstepbystep.businesslogic.api.BookstoreService;
+import hu.perit.wsstepbystep.rest.model.BookParams;
+import hu.perit.wsstepbystep.rest.model.ResponseUri;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import hu.perit.spvitamin.core.took.Took;
-import hu.perit.spvitamin.spring.logging.AbstractInterfaceLogger;
-import hu.perit.spvitamin.spring.security.auth.AuthorizationService;
-import hu.perit.wsstepbystep.rest.model.BookDTO;
-import hu.perit.wsstepbystep.rest.model.BookParams;
-import hu.perit.wsstepbystep.rest.model.ResponseUri;
-import lombok.extern.slf4j.Slf4j;
+import javax.servlet.http.HttpServletRequest;
+import java.net.URI;
+import java.time.LocalDate;
+import java.util.List;
 
 @RestController
 @Slf4j
@@ -25,11 +23,13 @@ public class BookController extends AbstractInterfaceLogger implements BookApi
 {
 
     private final AuthorizationService authorizationService;
+    private final BookstoreService bookstoreService;
 
-    protected BookController(HttpServletRequest httpRequest, AuthorizationService authorizationService)
+    protected BookController(HttpServletRequest httpRequest, AuthorizationService authorizationService, BookstoreService bookstoreService)
     {
         super(httpRequest);
         this.authorizationService = authorizationService;
+        this.bookstoreService = bookstoreService;
     }
 
 
@@ -44,10 +44,7 @@ public class BookController extends AbstractInterfaceLogger implements BookApi
         {
             this.traceIn(null, user.getUsername(), getMyMethodName(), 1, "");
 
-            List<BookDTO> books = new ArrayList<>();
-            books.add(createBookDTO(12L));
-            books.add(createBookDTO(13L));
-            return books;
+            return this.bookstoreService.getAllBooks();
         }
         catch (Exception ex)
         {
@@ -56,9 +53,11 @@ public class BookController extends AbstractInterfaceLogger implements BookApi
         }
     }
 
-    private BookDTO createBookDTO(Long id)
+
+    private BookDTO createBookDTO()
     {
-        BookDTO bookDTO = new BookDTO(id);
+        BookDTO bookDTO = new BookDTO();
+        bookDTO.setBookId(12L);
         bookDTO.setAuthor("Vámos Miklós");
         bookDTO.setTitle("Bár");
         bookDTO.setPages(245);
@@ -67,6 +66,7 @@ public class BookController extends AbstractInterfaceLogger implements BookApi
         return bookDTO;
     }
 
+
     //------------------------------------------------------------------------------------------------------------------
     // getBookById
     //------------------------------------------------------------------------------------------------------------------
@@ -74,7 +74,7 @@ public class BookController extends AbstractInterfaceLogger implements BookApi
     public BookDTO getBookById(Long id)
     {
         log.debug("getBookById()");
-        return createBookDTO(12L);
+        return createBookDTO();
     }
 
 
@@ -86,12 +86,9 @@ public class BookController extends AbstractInterfaceLogger implements BookApi
     {
         log.debug(String.format("createBook(%s)", bookParams.toString()));
 
-        long newBookId = 120;
+        long newUserId = this.bookstoreService.createBook(bookParams);
 
-        URI location = ServletUriComponentsBuilder //
-            .fromCurrentRequest() //
-            .path("/{id}") //
-            .buildAndExpand(newBookId).toUri();
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(newUserId).toUri();
 
         return new ResponseUri().location(location.toString());
     }

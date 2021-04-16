@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 import hu.perit.spvitamin.spring.logging.EventLogId;
-import hu.perit.wsstepbystep.rest.model.BookDTO;
+import hu.perit.webservice.rest.model.BookDTO;
 import hu.perit.wsstepbystep.rest.model.BookParams;
 import hu.perit.wsstepbystep.rest.model.ResponseUri;
 import io.swagger.annotations.ApiOperation;
