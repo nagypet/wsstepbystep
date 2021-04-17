@@ -7,7 +7,7 @@ CREATE SEQUENCE bookstore.author_author_id_seq;
 
 ALTER SEQUENCE bookstore.author_author_id_seq
     OWNER TO postgres;
-	
+
 
 CREATE SEQUENCE bookstore.book_book_id_seq;
 
@@ -26,7 +26,7 @@ CREATE SEQUENCE bookstore.bookxauthor_book_id_seq;
 ALTER SEQUENCE bookstore.bookxauthor_book_id_seq
     OWNER TO postgres;
 
-	
+
 
 CREATE TABLE IF NOT EXISTS bookstore.book
 (
@@ -74,4 +74,15 @@ ALTER TABLE bookstore.book
 
 ALTER TABLE bookstore.author
     ADD COLUMN rec_version bigint DEFAULT 0 NOT NULL
+;
+
+
+---------------------------------------------------------------------------------------------------------------------
+-- Update for step 18
+---------------------------------------------------------------------------------------------------------------------
+ALTER TABLE bookstore.book
+	ADD COLUMN createdby character varying(255) COLLATE pg_catalog."default",
+	ADD COLUMN createdat timestamp,
+	ADD COLUMN updatedby character varying(255) COLLATE pg_catalog."default",
+	ADD COLUMN updatedat timestamp
 ;

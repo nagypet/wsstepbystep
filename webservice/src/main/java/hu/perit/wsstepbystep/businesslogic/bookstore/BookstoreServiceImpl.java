@@ -1,20 +1,5 @@
 package hu.perit.wsstepbystep.businesslogic.bookstore;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
-
-import javax.persistence.LockModeType;
-
-import org.modelmapper.Conditions;
-import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.repository.Lock;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import hu.perit.spvitamin.core.typehelpers.LongUtils;
 import hu.perit.spvitamin.spring.exception.ResourceNotFoundException;
 import hu.perit.webservice.rest.model.AuthorWithBooksDTO;
@@ -90,26 +75,26 @@ public class BookstoreServiceImpl implements BookstoreService
     @Transactional
     public long createBook(BookParams bookParams)
     {
-        return createOrUpdateBookEntity(null, bookParams);
+        return createOrUpdateBookEntity(bookParams, null);
     }
 
 
-    public long createOrUpdateBookEntity(BookEntity bookEntityInput, BookParams bookParams)
+    public long createOrUpdateBookEntity(BookParams bookParams, BookEntity destinationBookEntity)
     {
         ModelMapper modelMapper = new ModelMapper();
         modelMapper.getConfiguration().setPropertyCondition(Conditions.isNotNull());
 
         BookEntity bookEntity = null;
-        if (bookEntityInput == null)
+        if (destinationBookEntity != null)
         {
-            // Creating a new BookEntity object
-            bookEntity = modelMapper.map(bookParams, BookEntity.class);
+            // Mapping fields of bookParams into destinationBookEntity
+            bookEntity = destinationBookEntity;
+            modelMapper.map(bookParams, bookEntity);
         }
         else
         {
-            // Mapping fields of bookParams into bookEntity
-            bookEntity = bookEntityInput;
-            modelMapper.map(bookParams, bookEntity);
+            // Creating a new BookEntity object
+            bookEntity = modelMapper.map(bookParams, BookEntity.class);
         }
 
         // Authors
@@ -162,7 +147,7 @@ public class BookstoreServiceImpl implements BookstoreService
             throw new ResourceNotFoundException(String.format("Book with id %d cannot be found!", id));
         }
 
-        createOrUpdateBookEntity(byId.get(), bookParams);
+        createOrUpdateBookEntity(bookParams, byId.get());
     }
 
 

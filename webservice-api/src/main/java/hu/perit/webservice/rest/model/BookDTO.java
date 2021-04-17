@@ -1,6 +1,7 @@
 package hu.perit.webservice.rest.model;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Set;
 
 import lombok.Getter;
@@ -15,5 +16,9 @@ public class BookDTO
     private Set<AuthorDTO> authors;
     private Integer pages;
     private LocalDate dateIssued;
+    private String createdBy;
+    private LocalDateTime createdAt;
+    private String updatedBy;
+    private LocalDateTime updatedAt;
     private Long recVersion;
 }
