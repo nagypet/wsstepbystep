@@ -80,4 +80,11 @@
 * Testing the client interface with an integration test
 
 ## step16: Persistency
+* docker-compose for PostgreSQL and pgadmin
+* script for initializing the db
 * Unidirectional, many-to-many relationship
+
+Run configuration:
+```
+-Dspring.profiles.active=default,dev
+```
