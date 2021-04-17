@@ -51,7 +51,7 @@
 	<logger name="hu.perit.spvitamin.spring.logging" level="DEBUG" additivity="false">
 		<appender-ref ref="application-message"/>
 	</logger>		
-	<logger name="hu.perit.spvitamin.data.dynamicdatasource" level="INFO" additivity="false">
+	<logger name="hu.perit.spvitamin.spring.data.dynamicdatasource" level="INFO" additivity="false">
 		<appender-ref ref="application-message"/>
 	</logger>
 	<logger name="hu.perit.spvitamin.spring.auth.filter.securitycontextremover" level="WARN" additivity="false">

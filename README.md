@@ -92,3 +92,22 @@ Run configuration:
 ## step17: Persistency - Bidirectional many-to-many relationship
 
 ## step18: JPA auditing
+
+```
+{
+    "id": 13,
+    "title": "New York - Budapest Metró",
+    "authors": [
+        {
+            "id": 1,
+            "name": "Vámos Miklós"
+        }
+    ],
+    "pages": 240,
+    "dateIssued": "2010-03-25",
+    "createdBy": "admin",
+    "createdAt": "2021-04-17 13:23:17.132",
+    "updatedBy": "admin",
+    "updatedAt": "2021-04-17 13:23:46.692"
+}
+```

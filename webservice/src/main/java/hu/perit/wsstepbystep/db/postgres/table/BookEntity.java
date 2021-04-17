@@ -101,10 +101,10 @@ public class BookEntity extends BaseEntity
     private LocalDateTime createdAt;
 
     @LastModifiedBy
-    @Column(name = "updatedby", nullable = false, updatable = false)
+    @Column(name = "updatedby", nullable = false, updatable = true)
     private String updatedBy;
     
     @LastModifiedDate
-    @Column(name = "updatedat", nullable = false, updatable = false)
+    @Column(name = "updatedat", nullable = false, updatable = true)
     private LocalDateTime updatedAt;
 }
