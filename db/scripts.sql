@@ -47,3 +47,10 @@ ALTER TABLE bookstore.book
 	ADD COLUMN updatedby character varying(255) COLLATE pg_catalog."default",
 	ADD COLUMN updatedat timestamp
 ;
+
+ALTER TABLE bookstore.author
+	ADD COLUMN createdby character varying(255) COLLATE pg_catalog."default",
+	ADD COLUMN createdat timestamp,
+	ADD COLUMN updatedby character varying(255) COLLATE pg_catalog."default",
+	ADD COLUMN updatedat timestamp
+;
