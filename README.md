@@ -83,3 +83,11 @@
 * docker-compose for PostgreSQL and pgadmin
 * script for initializing the db
 * Unidirectional, many-to-many relationship
+
+Run configuration:
+```
+-Dspring.profiles.active=default,dev
+```
+
+## step17: Persistency - Bidirectional many-to-many relationship
+

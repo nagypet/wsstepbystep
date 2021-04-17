@@ -3,7 +3,7 @@ package hu.perit.wsstepbystep.businesslogic.bookstore;
 
 import hu.perit.spvitamin.core.typehelpers.LongUtils;
 import hu.perit.spvitamin.spring.exception.ResourceNotFoundException;
-import hu.perit.webservice.rest.model.AuthorDTO;
+import hu.perit.webservice.rest.model.AuthorWithBooksDTO;
 import hu.perit.webservice.rest.model.BookDTO;
 import hu.perit.webservice.rest.model.BookParams;
 import hu.perit.wsstepbystep.businesslogic.api.BookstoreService;
@@ -172,7 +172,7 @@ public class BookstoreServiceImpl implements BookstoreService
     // getAllAuthors()
     //------------------------------------------------------------------------------------------------------------------
     @Override
-    public List<AuthorDTO> getAllAuthors()
+    public List<AuthorWithBooksDTO> getAllAuthors()
     {
         List<AuthorEntity> authorEntities = this.authorRepo.findAll();
         return authorEntities.stream() //
@@ -181,10 +181,10 @@ public class BookstoreServiceImpl implements BookstoreService
     }
 
 
-    private AuthorDTO mapAuthorEntity2DTO(AuthorEntity be)
+    private AuthorWithBooksDTO mapAuthorEntity2DTO(AuthorEntity be)
     {
         ModelMapper modelMapper = new ModelMapper();
 
-        return modelMapper.map(be, AuthorDTO.class);
+        return modelMapper.map(be, AuthorWithBooksDTO.class);
     }
 }
