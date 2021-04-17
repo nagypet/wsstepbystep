@@ -1,7 +1,6 @@
 package hu.perit.webservice.rest.model;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.Set;
 
 import lombok.Getter;
@@ -9,7 +8,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class BookDTO
+public class BookDTO extends Auditable
 {
     private Long id;
     private String title;
