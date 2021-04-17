@@ -36,3 +36,14 @@ CREATE TABLE IF NOT EXISTS bookstore.bookxauthor
         ON UPDATE NO ACTION
         ON DELETE NO ACTION
 );
+
+
+---------------------------------------------------------------------------------------------------------------------
+-- Update for step 18
+---------------------------------------------------------------------------------------------------------------------
+ALTER TABLE bookstore.book
+	ADD COLUMN createdby character varying(255) COLLATE pg_catalog."default",
+	ADD COLUMN createdat timestamp,
+	ADD COLUMN updatedby character varying(255) COLLATE pg_catalog."default",
+	ADD COLUMN updatedat timestamp
+;

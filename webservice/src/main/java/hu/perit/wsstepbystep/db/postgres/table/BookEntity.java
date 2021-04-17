@@ -17,11 +17,13 @@
 package hu.perit.wsstepbystep.db.postgres.table;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -30,6 +32,12 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
+
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedBy;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -43,6 +51,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @Entity
+@EntityListeners(AuditingEntityListener.class)
 @Table(name = "book", schema = "bookstore")
 public class BookEntity extends BaseEntity
 {
@@ -80,4 +89,22 @@ public class BookEntity extends BaseEntity
 
         return Collections.emptySet();
     }
+    
+    
+    // Auditing
+    @CreatedBy
+    @Column(name = "createdby", nullable = false, updatable = false)
+    private String createdBy;
+    
+    @CreatedDate
+    @Column(name = "createdat", nullable = false, updatable = false)
+    private LocalDateTime createdAt;
+
+    @LastModifiedBy
+    @Column(name = "updatedby", nullable = false, updatable = false)
+    private String updatedBy;
+    
+    @LastModifiedDate
+    @Column(name = "updatedat", nullable = false, updatable = false)
+    private LocalDateTime updatedAt;
 }

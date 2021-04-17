@@ -75,29 +75,29 @@ public class BookstoreServiceImpl implements BookstoreService
     // createBook
     //------------------------------------------------------------------------------------------------------------------
     @Override
+    @Transactional
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
     public long createBook(BookParams bookParams)
     {
-        return createOrUpdateBookEntity(null, bookParams);
+        return createOrUpdateBookEntity(bookParams, null);
     }
 
 
-    @Transactional
-    @Lock(LockModeType.PESSIMISTIC_WRITE)
-    public long createOrUpdateBookEntity(BookEntity bookEntityInput, BookParams bookParams)
+    public long createOrUpdateBookEntity(BookParams bookParams, BookEntity destinationBookEntity)
     {
         ModelMapper modelMapper = new ModelMapper();
 
         BookEntity bookEntity = null;
-        if (bookEntityInput == null)
+        if (destinationBookEntity != null)
         {
-            // Creating a new BookEntity object
-            bookEntity = modelMapper.map(bookParams, BookEntity.class);
+            // Mapping fields of bookParams into destinationBookEntity
+            bookEntity = destinationBookEntity;
+            modelMapper.map(bookParams, bookEntity);
         }
         else
         {
-            // Mapping fields of bookParams into bookEntity
-            bookEntity = bookEntityInput;
-            modelMapper.map(bookParams, bookEntity);
+            // Creating a new BookEntity object
+            bookEntity = modelMapper.map(bookParams, BookEntity.class);
         }
 
         // Authors
@@ -143,6 +143,8 @@ public class BookstoreServiceImpl implements BookstoreService
     // updateBook
     //------------------------------------------------------------------------------------------------------------------
     @Override
+    @Transactional
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
     public void updateBook(Long id, BookParams bookParams) throws ResourceNotFoundException
     {
         Optional<BookEntity> byId = this.bookRepo.findById(id);
@@ -151,7 +153,7 @@ public class BookstoreServiceImpl implements BookstoreService
             throw new ResourceNotFoundException(String.format("Book with id %d cannot be found!", id));
         }
 
-        createOrUpdateBookEntity(byId.get(), bookParams);
+        createOrUpdateBookEntity(bookParams, byId.get());
     }
 
 

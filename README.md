@@ -91,3 +91,4 @@ Run configuration:
 
 ## step17: Persistency - Bidirectional many-to-many relationship
 
+## step18: JPA auditing
