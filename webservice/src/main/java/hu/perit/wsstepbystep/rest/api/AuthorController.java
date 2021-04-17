@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 import hu.perit.spvitamin.core.took.Took;
 import hu.perit.spvitamin.spring.logging.AbstractInterfaceLogger;
 import hu.perit.spvitamin.spring.security.auth.AuthorizationService;
-import hu.perit.webservice.rest.model.AuthorDTO;
+import hu.perit.webservice.rest.model.AuthorWithBooksDTO;
 import hu.perit.wsstepbystep.businesslogic.api.BookstoreService;
 import hu.perit.wsstepbystep.config.Constants;
 
@@ -33,7 +33,7 @@ public class AuthorController extends AbstractInterfaceLogger implements AuthorA
     // getAllAuthors()
     //------------------------------------------------------------------------------------------------------------------
     @Override
-    public List<AuthorDTO> getAllAuthors()
+    public List<AuthorWithBooksDTO> getAllAuthors()
     {
         UserDetails user = this.authorizationService.getAuthenticatedUser();
         try (Took took = new Took())

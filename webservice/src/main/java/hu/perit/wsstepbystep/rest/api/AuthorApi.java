@@ -6,7 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-import hu.perit.webservice.rest.model.AuthorDTO;
+import hu.perit.webservice.rest.model.AuthorWithBooksDTO;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
@@ -28,5 +28,5 @@ public interface AuthorApi
         @ApiResponse(code = 500, message = "Internal server error") //
     })
     @ResponseStatus(value = HttpStatus.OK)
-    List<AuthorDTO> getAllAuthors();
+    List<AuthorWithBooksDTO> getAllAuthors();
 }

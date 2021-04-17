@@ -88,3 +88,6 @@ Run configuration:
 ```
 -Dspring.profiles.active=default,dev
 ```
+
+## step17: Persistency - Bidirectional many-to-many relationship
+

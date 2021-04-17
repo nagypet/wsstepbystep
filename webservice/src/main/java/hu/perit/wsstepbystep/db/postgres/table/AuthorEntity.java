@@ -16,12 +16,18 @@
 
 package hu.perit.wsstepbystep.db.postgres.table;
 
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -52,4 +58,19 @@ public class AuthorEntity extends BaseEntity
 
     @Column(name = "name")
     private String name;
+
+    // The inverse side of the many-to-many relationship
+    @ManyToMany(mappedBy = "authorEntities", fetch = FetchType.LAZY)
+    private Set<BookEntity> bookEntities = new HashSet<>();
+
+    public Set<BookEntity> getBooks()
+    {
+        if (this.bookEntities != null)
+        {
+            return this.bookEntities;
+        }
+
+        return Collections.emptySet();
+    }
+
 }

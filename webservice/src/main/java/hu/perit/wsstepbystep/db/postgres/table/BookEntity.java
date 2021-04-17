@@ -61,6 +61,7 @@ public class BookEntity extends BaseEntity
     @Column(name = "date_issued")
     private LocalDate dateIssued;
 
+    // The owning side of the many-to-many relationship
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "bookxauthor", schema = "bookstore", // 
         joinColumns = {@JoinColumn(name = "book_id")}, //
