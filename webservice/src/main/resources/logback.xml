@@ -34,6 +34,7 @@
 	<logger name="com.zaxxer.hikari.HikariConfig" level="INFO"/>
 	<logger name="com.zaxxer.hikari" level="ERROR"/>
 	<logger name="org.hibernate.SQL" level="DEBUG"/>
+	<logger name="org.hibernate.type.descriptor.sql.BasicBinder" level="TRACE"/>
 	<logger name="org.springframework.boot.context.config" level="DEBUG"/>
 	<logger name="com.thoughtworks.xstream" level="OFF"/>
 	<logger name="org.springframework.transaction.interceptor" level="TRACE"/>
@@ -50,7 +51,7 @@
 	<logger name="hu.perit.spvitamin.spring.logging" level="DEBUG" additivity="false">
 		<appender-ref ref="application-message"/>
 	</logger>		
-	<logger name="hu.perit.spvitamin.data.dynamicdatasource" level="INFO" additivity="false">
+	<logger name="hu.perit.spvitamin.spring.data.dynamicdatasource" level="INFO" additivity="false">
 		<appender-ref ref="application-message"/>
 	</logger>
 	<logger name="hu.perit.spvitamin.spring.auth.filter.securitycontextremover" level="WARN" additivity="false">
@@ -73,7 +74,6 @@
 	#logging.level.org.springframework.web=OFF
 	#logging.level.org.hibernate=TRACE
 	#logging.level.org.hibernate.SQL=DEBUG
-	#logging.level.org.hibernate.type.descriptor.sql.BasicBinder=TRACE
 	#logging.level.org.springframework.ws.transport.http=DEBUG
 	#logging.level.org.springframework.ws=DEBUG
 	-->
