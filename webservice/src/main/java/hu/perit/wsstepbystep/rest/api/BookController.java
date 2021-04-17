@@ -1,9 +1,21 @@
 package hu.perit.wsstepbystep.rest.api;
 
+import java.net.URI;
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
 import hu.perit.spvitamin.core.took.Took;
+import hu.perit.spvitamin.spring.exception.ResourceNotFoundException;
 import hu.perit.spvitamin.spring.logging.AbstractInterfaceLogger;
 import hu.perit.spvitamin.spring.security.auth.AuthorizationService;
 import hu.perit.webservice.rest.model.BookDTO;
+import hu.perit.webservice.rest.model.BookParams;
+import hu.perit.webservice.rest.model.ResponseUri;
 import hu.perit.wsstepbystep.businesslogic.api.BookstoreService;
 import hu.perit.wsstepbystep.rest.model.BookParams;
 import hu.perit.wsstepbystep.rest.model.ResponseUri;
@@ -16,6 +28,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.net.URI;
 import java.time.LocalDate;
 import java.util.List;
+import hu.perit.wsstepbystep.config.Constants;
 
 @RestController
 @Slf4j
@@ -42,28 +55,15 @@ public class BookController extends AbstractInterfaceLogger implements BookApi
         UserDetails user = this.authorizationService.getAuthenticatedUser();
         try (Took took = new Took())
         {
-            this.traceIn(null, user.getUsername(), getMyMethodName(), 1, "");
+            this.traceIn(null, user.getUsername(), getMyMethodName(), Constants.EVENT_ID_GET_ALL_BOOKS, "");
 
             return this.bookstoreService.getAllBooks();
         }
         catch (Exception ex)
         {
-            this.traceOut(null, user.getUsername(), getMyMethodName(), 1, ex);
+            this.traceOut(null, user.getUsername(), getMyMethodName(), Constants.EVENT_ID_GET_ALL_BOOKS, ex);
             throw ex;
         }
-    }
-
-
-    private BookDTO createBookDTO()
-    {
-        BookDTO bookDTO = new BookDTO();
-        bookDTO.setBookId(12L);
-        bookDTO.setAuthor("Vámos Miklós");
-        bookDTO.setTitle("Bár");
-        bookDTO.setPages(245);
-        bookDTO.setDateIssued(LocalDate.of(2012, 3, 23));
-
-        return bookDTO;
     }
 
 
@@ -71,10 +71,20 @@ public class BookController extends AbstractInterfaceLogger implements BookApi
     // getBookById
     //------------------------------------------------------------------------------------------------------------------
     @Override
-    public BookDTO getBookById(Long id)
+    public BookDTO getBookById(Long id) throws ResourceNotFoundException
     {
-        log.debug("getBookById()");
-        return createBookDTO();
+        UserDetails user = this.authorizationService.getAuthenticatedUser();
+        try (Took took = new Took())
+        {
+            this.traceIn(null, user.getUsername(), getMyMethodName(), Constants.EVENT_ID_GET_BOOK_BY_ID, String.format("id: %d", id));
+
+            return this.bookstoreService.getBookById(id);
+        }
+        catch (Error | RuntimeException | ResourceNotFoundException ex)
+        {
+            this.traceOut(null, user.getUsername(), getMyMethodName(), Constants.EVENT_ID_GET_BOOK_BY_ID, ex);
+            throw ex;
+        }
     }
 
 
@@ -84,13 +94,22 @@ public class BookController extends AbstractInterfaceLogger implements BookApi
     @Override
     public ResponseUri createBook(BookParams bookParams)
     {
-        log.debug(String.format("createBook(%s)", bookParams.toString()));
+        UserDetails user = this.authorizationService.getAuthenticatedUser();
+        try (Took took = new Took())
+        {
+            this.traceIn(null, user.getUsername(), getMyMethodName(), Constants.EVENT_ID_CREATE_BOOK, bookParams.toString());
 
-        long newUserId = this.bookstoreService.createBook(bookParams);
+            long newUserId = this.bookstoreService.createBook(bookParams);
 
-        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(newUserId).toUri();
+            URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(newUserId).toUri();
 
-        return new ResponseUri().location(location.toString());
+            return new ResponseUri().location(location.toString());
+        }
+        catch (Error | RuntimeException ex)
+        {
+            this.traceOut(null, user.getUsername(), getMyMethodName(), Constants.EVENT_ID_CREATE_BOOK, ex);
+            throw ex;
+        }
     }
 
 
@@ -98,9 +117,21 @@ public class BookController extends AbstractInterfaceLogger implements BookApi
     // updateBook
     //------------------------------------------------------------------------------------------------------------------
     @Override
-    public void updateBook(Long id, BookParams bookParams)
+    public void updateBook(Long id, BookParams bookParams) throws ResourceNotFoundException
     {
-        log.debug(String.format("updateBook(%d, %s)", id, bookParams.toString()));
+        UserDetails user = this.authorizationService.getAuthenticatedUser();
+        try (Took took = new Took())
+        {
+            this.traceIn(null, user.getUsername(), getMyMethodName(), Constants.EVENT_ID_UPDATE_BOOK,
+                String.format("id: %d, bookParams: %s", id, bookParams.toString()));
+
+            this.bookstoreService.updateBook(id, bookParams);
+        }
+        catch (Error | RuntimeException | ResourceNotFoundException ex)
+        {
+            this.traceOut(null, user.getUsername(), getMyMethodName(), Constants.EVENT_ID_UPDATE_BOOK, ex);
+            throw ex;
+        }
     }
 
 
@@ -108,15 +139,26 @@ public class BookController extends AbstractInterfaceLogger implements BookApi
     // deleteBook
     //------------------------------------------------------------------------------------------------------------------
     @Override
-    public void deleteBook(Long id)
+    public void deleteBook(Long id) throws ResourceNotFoundException
     {
-        log.debug(String.format("deleteBook(%d)", id));
+        UserDetails user = this.authorizationService.getAuthenticatedUser();
+        try (Took took = new Took())
+        {
+            this.traceIn(null, user.getUsername(), getMyMethodName(), Constants.EVENT_ID_DELETE_BOOK, String.format("id: %d", id));
+
+            this.bookstoreService.deleteBook(id);
+        }
+        catch (Error | RuntimeException | ResourceNotFoundException ex)
+        {
+            this.traceOut(null, user.getUsername(), getMyMethodName(), Constants.EVENT_ID_DELETE_BOOK, ex);
+            throw ex;
+        }
     }
 
 
     @Override
     protected String getSubsystemName()
     {
-        return "wsstepbystep";
+        return Constants.SUBSYSTEM_NAME;
     }
 }

@@ -29,8 +29,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.context.annotation.Primary;
-import org.springframework.data.domain.AuditorAware;
-import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
@@ -52,7 +50,6 @@ import lombok.extern.slf4j.Slf4j;
 @Configuration
 @EnableTransactionManagement
 @EnableJpaRepositories(basePackages = PostgresDbConfig.PACKAGES, entityManagerFactoryRef = PostgresDbConfig.ENTITY_MANAGER_FACTORY, transactionManagerRef = PostgresDbConfig.TRANSACTION_MANAGER)
-@EnableJpaAuditing(auditorAwareRef = "auditorProvider")
 @Slf4j
 public class PostgresDbConfig
 {
@@ -105,16 +102,5 @@ public class PostgresDbConfig
     public PlatformTransactionManager transactionManager(@Qualifier(ENTITY_MANAGER_FACTORY) EntityManagerFactory entityManagerFactory)
     {
         return new JpaTransactionManager(entityManagerFactory);
-    }
-
-    /**
-     * #know-how:jpa-auditing
-     *
-     * @return
-     */
-    @Bean
-    public AuditorAware<Long> auditorProvider()
-    {
-        return new SpringSecurityAuditorAware();
     }
 }

@@ -13,10 +13,11 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
+import hu.perit.spvitamin.spring.exception.ResourceNotFoundException;
 import hu.perit.spvitamin.spring.logging.EventLogId;
 import hu.perit.webservice.rest.model.BookDTO;
-import hu.perit.wsstepbystep.rest.model.BookParams;
-import hu.perit.wsstepbystep.rest.model.ResponseUri;
+import hu.perit.webservice.rest.model.BookParams;
+import hu.perit.webservice.rest.model.ResponseUri;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
@@ -54,7 +55,7 @@ public interface BookApi
     })
     @ResponseStatus(value = HttpStatus.OK)
     @EventLogId(eventId = 2)
-    BookDTO getBookById(@PathVariable("id") Long id);
+    BookDTO getBookById(@PathVariable("id") Long id) throws ResourceNotFoundException;
 
 
     //------------------------------------------------------------------------------------------------------------------
@@ -87,7 +88,7 @@ public interface BookApi
     })
     @ResponseStatus(value = HttpStatus.OK)
     @EventLogId(eventId = 4)
-    void updateBook(@PathVariable("id") Long id, @Valid @RequestBody BookParams bookParams);
+    void updateBook(@PathVariable("id") Long id, @Valid @RequestBody BookParams bookParams) throws ResourceNotFoundException;
 
 
     //------------------------------------------------------------------------------------------------------------------
@@ -104,5 +105,5 @@ public interface BookApi
     })
     @ResponseStatus(value = HttpStatus.OK)
     @EventLogId(eventId = 5)
-    void deleteBook(@PathVariable("id") Long id);
+    void deleteBook(@PathVariable("id") Long id) throws ResourceNotFoundException;
 }

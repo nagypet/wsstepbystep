@@ -16,19 +16,12 @@
 
 package hu.perit.wsstepbystep.db.postgres.table;
 
-import java.util.Set;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Index;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -48,22 +41,15 @@ import lombok.Setter;
 @NoArgsConstructor
 @Entity
 @EntityListeners(AuditingEntityListener.class)
-@Table(name = "author", schema = "bookstore", indexes = {@Index(columnList = "name", name = "author_ix_name", unique = true)})
-public class AuthorEntity
+@Table(name = "author", schema = "bookstore")
+public class AuthorEntity extends BaseEntity
 {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "author_id", nullable = false, columnDefinition = "bigserial")
-    private Long authorId;
+    private Long id;
 
     @Column(name = "name")
     private String name;
-
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "bookxauthor", schema = "bookstore", // 
-        joinColumns = {@JoinColumn(name = "author_id")}, //
-        inverseJoinColumns = {@JoinColumn(name = "book_id")} //
-    )
-    private Set<BookEntity> bookEntities;
 }

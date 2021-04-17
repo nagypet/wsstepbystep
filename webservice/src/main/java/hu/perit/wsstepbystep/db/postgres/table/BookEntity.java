@@ -17,6 +17,7 @@
 package hu.perit.wsstepbystep.db.postgres.table;
 
 import java.time.LocalDate;
+import java.util.Collections;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -43,13 +44,13 @@ import lombok.Setter;
 @NoArgsConstructor
 @Entity
 @Table(name = "book", schema = "bookstore")
-public class BookEntity
+public class BookEntity extends BaseEntity
 {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "book_id", nullable = false, columnDefinition = "bigserial")
-    private Long bookId;
+    private Long id;
 
     @Column(name = "title")
     private String title;
@@ -67,4 +68,15 @@ public class BookEntity
     )
     // Important to have a Set here! Hibernate will generate a composite primary key only when using a Set.
     private Set<AuthorEntity> authorEntities;
+
+
+    public Set<AuthorEntity> getAuthors()
+    {
+        if (this.authorEntities != null)
+        {
+            return this.authorEntities;
+        }
+
+        return Collections.emptySet();
+    }
 }
