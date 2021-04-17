@@ -1,6 +1,7 @@
 package hu.perit.webservice.rest.model;
 
 import java.time.LocalDate;
+import java.util.Set;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
@@ -14,11 +15,14 @@ public class BookParams
 {
     @Size(min = 1, max = 100)
     private String title;
-    @Size(min = 1, max = 100)
-    private String author;
+
+    @NotNull
+    private Set<AuthorDTO> authors;
+    
     @Min(0)
     @Max(Integer.MAX_VALUE)
     private Integer pages;
+    
     @NotNull
     private LocalDate dateIssued;
 }

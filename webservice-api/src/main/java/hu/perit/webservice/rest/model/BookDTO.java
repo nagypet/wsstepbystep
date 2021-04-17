@@ -1,6 +1,7 @@
 package hu.perit.webservice.rest.model;
 
 import java.time.LocalDate;
+import java.util.Set;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -9,15 +10,9 @@ import lombok.Setter;
 @Setter
 public class BookDTO
 {
-    public BookDTO()
-    {
-        super();
-        this.bookId = null;
-    }
-
-    private Long bookId;
+    private Long id;
     private String title;
-    private String author;
+    private Set<AuthorDTO> authors;
     private Integer pages;
     private LocalDate dateIssued;
 }

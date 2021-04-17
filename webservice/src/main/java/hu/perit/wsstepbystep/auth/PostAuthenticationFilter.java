@@ -110,11 +110,13 @@ public class PostAuthenticationFilter extends OncePerRequestFilter
             {
                 permissions.add(new SimpleGrantedAuthority(Permissions.BOOK_READ_ACCESS.name()));
                 permissions.add(new SimpleGrantedAuthority(Permissions.BOOK_WRITE_ACCESS.name()));
+                permissions.add(new SimpleGrantedAuthority(Permissions.AUTHOR_READ_ACCESS.name()));
             }
 
             if (("ROLE_" + Role.PUBLIC.name()).equals(role.getAuthority()))
             {
                 permissions.add(new SimpleGrantedAuthority(Permissions.BOOK_READ_ACCESS.name()));
+                permissions.add(new SimpleGrantedAuthority(Permissions.AUTHOR_READ_ACCESS.name()));
             }
         }
 

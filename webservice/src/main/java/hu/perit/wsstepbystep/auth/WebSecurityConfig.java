@@ -33,6 +33,7 @@ import hu.perit.spvitamin.spring.config.SecurityProperties;
 import hu.perit.spvitamin.spring.config.SysConfig;
 import hu.perit.spvitamin.spring.rest.api.AuthApi;
 import hu.perit.spvitamin.spring.security.auth.SimpleHttpSecurityBuilder;
+import hu.perit.wsstepbystep.rest.api.AuthorApi;
 import hu.perit.wsstepbystep.rest.api.BookApi;
 import lombok.extern.slf4j.Slf4j;
 
@@ -112,9 +113,13 @@ public class WebSecurityConfig
         protected void configure(HttpSecurity http) throws Exception
         {
             SimpleHttpSecurityBuilder.newInstance(http) //
-                .scope(BookApi.BASE_URL_BOOKS + "/**") //
+                .scope( //
+                    BookApi.BASE_URL_BOOKS + "/**", //
+                    AuthorApi.BASE_URL_AUTHORS + "/**" //
+                ) //
                 .authorizeRequests() //                
                 .antMatchers(HttpMethod.GET, BookApi.BASE_URL_BOOKS + "/**").hasAuthority(Permissions.BOOK_READ_ACCESS.name()) //
+                .antMatchers(HttpMethod.GET, AuthorApi.BASE_URL_AUTHORS + "/**").hasAuthority(Permissions.AUTHOR_READ_ACCESS.name()) //
                 .antMatchers(BookApi.BASE_URL_BOOKS + "/**").hasAuthority(Permissions.BOOK_WRITE_ACCESS.name()) //
                 .anyRequest().denyAll();
 
