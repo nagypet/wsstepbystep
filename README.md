@@ -237,3 +237,149 @@ Author: Peter Nagy <nagy.peter.home@gmail.com>
 
 Just perfect!
 
+## step20: Improving the health endpoint
+
+Let's see what we already have. We switch on the db part of the health management endpoint: `management.health.db.enabled=true`
+
+https://www.localhost.hu:8080/actuator/health
+```
+{
+   "status":"UP",
+   "components":{
+      "db":{
+         "status":"UP",
+         "details":{
+            "database":"PostgreSQL",
+            "validationQuery":"isValid()"
+         }
+      },
+      "diskSpace":{
+         "status":"UP",
+         "details":{
+            "total":511455899648,
+            "free":335739858944,
+            "threshold":10485760,
+            "exists":true
+         }
+      },
+      "ping":{
+         "status":"UP"
+      }
+   }
+}
+```
+
+Cool. This is what we got from the spring framework for free. This is almost perfect, but there is one major drawback. The health endpoint might be called by the load balancer to check if the service is up and running. This has  a frequency of 5 seconds, so the health endpoint must be executed within a couple of milliseconds, otherwise the load balancer will assume, our service is down. We have a similar case when monitoring the service with prometheus. Prometheus polling our service in every 15 seconds. Now, the database timeout is generally higher to allow slow running queries to execute. I am using generally 120 seconds or 90 seconds depending on the slowest query. As a consequence, if the database is down, e.g. we have a network outage, we will not receive an answer from the database any sooner then the value of the database timeout. This is a problem, in case of the health endpoint. We just need an answer from the database within let's say 2 seconds. If there is no answer within 2 seconds, we have to signal a database down status. So we take an easy query to check the database and execute it asynchronously. Let's see how?
+
+First of all we set `management.health.db.enabled=false` again, and implement the class `HealthIndicatorDatabase`.
+
+```
+@Component
+@Slf4j
+public class HealthIndicatorDatabase extends AbstractHealthIndicator
+{
+    @Autowired
+    private NativeQueryRepo nativeQueryRepo;
+
+    @Override
+    protected void doHealthCheck(Health.Builder builder) throws Exception
+    {
+        LocalDateTime timestamp = LocalDateTime.now();
+        builder.withDetail("Timestamp", timestamp.format(DateTimeFormatter.ofPattern(Constants.DEFAULT_JACKSON_TIMESTAMPFORMAT)));
+
+        try
+        {
+            boolean dbUpAndRunning = AsyncExecutor.invoke(this::checkDbUpAndRunning, null);
+            if (dbUpAndRunning)
+            {
+                builder.up();
+                builder.withDetail("Status", "Database server is up and running");
+            }
+            else
+            {
+                builder.down();
+                builder.withDetail("Status", "Database server cannot be reached!");
+            }
+        }
+        catch (RuntimeException ex)
+        {
+            log.error(String.format("Health check failed: %s", ex));
+            builder.down();
+            builder.withDetail("error", ex);
+        }
+        catch (TimeoutException ex)
+        {
+            log.error("Health check failed: the database server cannot be reached!");
+            builder.down();
+            builder.withDetail("Status", "Database server cannot be reached!");
+        }
+    }
+
+
+    private boolean checkDbUpAndRunning()
+    {
+        Object result = this.nativeQueryRepo.getSingleResult("SELECT 1", false);
+        return result instanceof Integer && ((Integer) result).equals(1);
+    }
+}
+```
+
+Now our health endpoint provides the following information.
+
+```
+{
+   "status":"UP",
+   "components":{
+      "diskSpace":{
+         "status":"UP",
+         "details":{
+            "total":511455899648,
+            "free":335724470272,
+            "threshold":10485760,
+            "exists":true
+         }
+      },
+      "healthIndicatorDatabase":{
+         "status":"UP",
+         "details":{
+            "Timestamp":"2021-04-18 09:54:34.076",
+            "Status":"Database server is up and running"
+         }
+      },
+      "ping":{
+         "status":"UP"
+      }
+   }
+}
+```
+
+Now if I stop the docker container of the database, let's see if anything changes?
+
+```
+{
+   "status":"DOWN",
+      "diskSpace":{
+         "status":"UP",
+         "details":{
+            "total":511455899648,
+            "free":335726088192,
+            "threshold":10485760,
+            "exists":true
+         }
+      },
+      "healthIndicatorDatabase":{
+         "status":"DOWN",
+         "details":{
+            "Timestamp":"2021-04-18 09:58:41.721",
+            "Status":"Database server cannot be reached!"
+         }
+      },
+      "ping":{
+         "status":"UP"
+      }
+   }
+}
+```
+
+And yes, the database status changes to DOWN. That's pretty much it.
+
