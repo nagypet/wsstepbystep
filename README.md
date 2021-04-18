@@ -1,5 +1,32 @@
 # wsstepbystep
 
+# Contents
+
+* step01: empty project frame
+* step02: REST API 
+* step03: Swagger documentation 
+* step04: Exception handling - ControllerAdvice annotation
+* step05: Admin GUI
+* step06: Security 1
+* step07: Security with roles and permissions
+* step08: Making the /authenticate endpoint
+* step09: Changing the authentication method of the book controller from Basic to Bearer
+* step10: Validation of the REST input parameter
+* step11: Turning HTTPS on
+* step12: Updating the Swagger docu with authorization methods
+* step13: Configuring the management endpoints
+* step14: Running the webservice in a docker container
+* step15: Integration test
+* step16: Persistency
+* step17: Persistency - Bidirectional many-to-many relationship
+* step18: JPA auditing
+* step19: Structuring property files properly
+* step20: Improving the health endpoint
+* step21: Improving the health endpoint even further
+* step22: Monitoring - creating an application specific monitoring endpoint
+* step23: Installing Prometheus and Grafana
+
+
 # Branches
 
 ## step01: empty project frame
@@ -837,7 +864,7 @@ https://www.localhost.hu:8080/actuator/metrics/wsstepbystep.bookcount
 
 Also we have included the health status as well, so that it can be monitored with Prometheus.
 
-## step23 Installing Prometheus and Grafana
+## step23: Installing Prometheus and Grafana
 
 Building the images:
 
