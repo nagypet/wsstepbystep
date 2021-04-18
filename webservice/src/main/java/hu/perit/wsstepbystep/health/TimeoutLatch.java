@@ -2,25 +2,25 @@ package hu.perit.wsstepbystep.health;
 
 import hu.perit.spvitamin.spring.config.SysConfig;
 
-class TimeoutLatch
+public class TimeoutLatch
 {
 
     private boolean opened;
     private long timeClosing;
 
-    TimeoutLatch()
+    public TimeoutLatch()
     {
         this.opened = true;
     }
 
 
-    synchronized void setClosed()
+    public synchronized void setClosed()
     {
         this.opened = false;
         this.timeClosing = System.currentTimeMillis();
     }
 
-    synchronized boolean isOpen()
+    public synchronized boolean isOpen()
     {
         if (this.opened)
         {
@@ -36,7 +36,7 @@ class TimeoutLatch
         return false;
     }
     
-    boolean isClosed()
+    public boolean isClosed()
     {
         return !isOpen();
     }
