@@ -488,7 +488,7 @@ class TimeoutLatch
 }
 ```
 
-## step22: Monitoring - creating an application specific monitoring andpoint
+## step22: Monitoring - creating an application specific monitoring endpoint
 
 We already have the metrics and prometheus endpoints out of the box.
 
@@ -748,7 +748,7 @@ tomcat_sessions_rejected_sessions_total 0.0
 process_cpu_usage 0.2067119764619553
 ```
 
-Cool. But now we want to implement an application specific monitoring endpoint. Let's assume we want to monitor the count of books created. All we have to do, is ti implement a service that will provide the count of books.
+Cool. But now we want to implement an application specific monitoring endpoint. Let's assume we want to monitor the count of books created. All we have to do, is to implement a service that will provide the count of books.
 
 ```
 @Slf4j
