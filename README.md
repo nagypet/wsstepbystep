@@ -1,5 +1,7 @@
 # wsstepbystep
 
+What is this project all about? Step by step, I show you how to do a production-ready web service. Spvitamine is used in the implementation. If you’re just curious about one step or the other, I’d advise you to compare it to the previous branch and see what the difference was in that particular step.
+
 # Contents
 
 * step01: empty project frame
@@ -30,6 +32,8 @@
 # Branches
 
 ## step01: empty project frame
+
+Please git-clone the spvitamin project in your project root folder.
 
 ## step02: REST API 
 * empty CRUD operations in the book controller
