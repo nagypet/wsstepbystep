@@ -107,3 +107,133 @@
     "updatedAt": "2021-04-17 13:23:46.692"
 }
 ```
+
+## step19: Structuring property files properly
+* Running the whole thing in docker
+
+I have the following property files in the config dir
+
+```
+c:\np\github\wsstepbystep\webservice\src\main\dist\bin\config>dir
+ Volume in drive C has no label.
+ Volume Serial Number is BEA2-3C2D
+
+ Directory of c:\np\github\wsstepbystep\webservice\src\main\dist\bin\config
+
+2021.04.18  07:47    <DIR>          .
+2021.04.18  07:47    <DIR>          ..
+2021.04.17  14:16               654 application-default.properties
+2021.04.17  09:48               906 application-dev.properties
+2021.04.18  07:47               905 application-devdocker.properties
+2021.04.16  16:20               670 application-integtest.properties
+2021.04.17  14:16             3 991 application.properties
+               5 File(s)          7 126 bytes
+               2 Dir(s)  335 745 679 360 bytes free
+```
+
+When starting the webservice application without defining the active profile, the spring framework will load application.properties and application-default.properties. We also have to know, that there is a possibility to define the active profile(s) in a property file. However in one of the recent versions of spring boot this feature is switched off by default, we can reactivate it, like this:
+
+application.properties
+```
+# To enable spring.profiles.include
+spring.config.use-legacy-processing=true
+```
+
+Now put all the standard, I mean environment independent configuration into application.properties. You can use application-default.properties to define a default profile, so that you the webservice always starts without any JVM parameter.
+
+application-default.properties
+```
+spring.profiles.include=dev
+```
+
+The dev profile in application-dev.properties is good for running the webservice in the IDE ore starting it from a command line.
+
+application-dev.properties
+```
+datasource.postgres.db-type=postgresql
+datasource.postgres.host=localhost
+datasource.postgres.db-name=wsstepbystep
+datasource.postgres.username=postgres
+datasource.postgres.encrypted-password=1tvmTu8Ya8A=
+datasource.postgres.ddl-auto=validate
+```
+
+Of course when running the database and the webservice in docker, the localhost will not work, so we have to define another parameter in `datasource.postgres.host`. Our application-devdocker.properties looks like this:
+```
+datasource.postgres.db-type=postgresql
+datasource.postgres.host=postgres
+datasource.postgres.db-name=wsstepbystep
+datasource.postgres.username=postgres
+datasource.postgres.encrypted-password=1tvmTu8Ya8A=
+datasource.postgres.ddl-auto=validate
+```
+
+We are using the host `postgres` which is the host name of the database withing the docker swarm.
+
+Now in the docker-compose.yml we define the `WEBSERVICE_OPTS` environment variable to activate the devdocker profile.
+
+```
+    #####################################################################################                 
+    webservice:
+    #####################################################################################                 
+        container_name: webservice
+        image: webservice
+        environment:
+              - JAVA_OPTS=
+              - WEBSERVICE_OPTS=-Dspring.profiles.active=devdocker
+        ports:
+            - "8080:8080"
+        networks: 
+            - back-tier-net
+            - monitoring
+        hostname: 'webservice'
+
+```
+
+That way spring will load application.properties and devdocker.properties. See the log:
+
+```
+c:\np\github\wsstepbystep\docker-compose\dev>docker ps
+CONTAINER ID        IMAGE                   COMMAND                  CREATED             STATUS              PORTS                    NAMES
+cf0ed0d285b3        webservice              "sh ./webservice"        20 seconds ago      Up 4 seconds        0.0.0.0:8080->8080/tcp   webservice
+8393a610098e        thajeztah/pgadmin4      "python ./usr/local/…"   21 seconds ago      Up 6 seconds        0.0.0.0:5400->5050/tcp   pgadmin
+55406095a312        postgres:10.13-alpine   "docker-entrypoint.s…"   22 seconds ago      Up 7 seconds        0.0.0.0:5432->5432/tcp   postgres
+
+c:\np\github\wsstepbystep\docker-compose\dev>docker logs -f webservice
+
+ __        ______        _                   _                     _
+ \ \      / / ___|   ___| |_ ___ _ __       | |__  _   _       ___| |_ ___ _ __
+  \ \ /\ / /\___ \  / __| __/ _ \ '_ \ _____| '_ \| | | |_____/ __| __/ _ \ '_ \
+   \ V  V /  ___) | \__ \ ||  __/ |_) |_____| |_) | |_| |_____\__ \ ||  __/ |_) |
+    \_/\_/  |____/  |___/\__\___| .__/      |_.__/ \__, |     |___/\__\___| .__/
+                                |_|                |___/                  |_|
+                                       project
+
+Alpine 11.0.10+11-alpine-r0
+Spring-Boot: 2.4.5
+webservice: 1.0.0-SNAPSHOT
+
+Author: Peter Nagy <nagy.peter.home@gmail.com>
+
+2021-04-18 07:50:31.936 INFO  --- [main           ] h.p.w.WsstepbystepApplication   55 : Starting WsstepbystepApplication v1.0.0-SNAPSHOT using Java 11.0.10 on webservice with PID 1 (/usr/src/webservice/lib/webservice-1.0.0-SNAPSHOT.jar started by root in /usr/src/webservice/bin)
+2021-04-18 07:50:31.944 DEBUG --- [main           ] h.p.w.WsstepbystepApplication   56 : Running with Spring Boot v2.4.5, Spring v5.3.6
+2021-04-18 07:50:31.944 INFO  --- [main           ] h.p.w.WsstepbystepApplication  679 : The following profiles are active: devdocker
+2021-04-18 07:50:32.037 DEBUG SPR [main           ] igDataEnvironmentPostProcessor 252 : Switching to legacy config file processing [[ConfigurationProperty@57abad67 name = spring.config.use-legacy-processing, value = 'true', origin = URL [file:config/application.properties] - 90:37]]
+2021-04-18 07:50:32.039 DEBUG SPR [main           ] .ConfigFileApplicationListener 252 : Activated activeProfiles devdocker
+2021-04-18 07:50:32.040 DEBUG SPR [main           ] .ConfigFileApplicationListener 252 : Loaded config file 'file:./config/application.properties' (file:./config/application.properties)
+2021-04-18 07:50:32.040 DEBUG SPR [main           ] .ConfigFileApplicationListener 252 : Loaded config file 'file:./config/application-devdocker.properties' (file:./config/application-devdocker.properties) for profile devdocker
+2021-04-18 07:50:36.380 INFO  SPR [main           ] o.s.b.w.e.t.TomcatWebServer    108 : Tomcat initialized with port(s): 8080 (https)
+2021-04-18 07:50:37.319 DEBUG --- [main           ] h.p.w.d.p.PostgresDbConfig      81 : creating DataSource for 'postgres'
+2021-04-18 07:50:37.351 INFO  --- [main           ] h.p.s.s.d.d.ConnectionParam     81 : jdbc:postgresql://postgres:5432/wsstepbystep
+2021-04-18 07:50:42.859 WARN  SPR [main           ] figuration$JpaWebConfiguration 221 : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2021-04-18 07:50:45.382 INFO  SPR [main           ] o.s.b.w.e.t.TomcatWebServer    220 : Tomcat started on port(s): 8080 (https) with context path ''
+2021-04-18 07:50:46.098 INFO  --- [main           ] h.p.w.WsstepbystepApplication   61 : Started WsstepbystepApplication in 14.893 seconds (JVM running for 15.794)
+2021-04-18 07:51:25.954 DEBUG SPR [nio-8080-exec-6] .a.d.DaoAuthenticationProvider 199 : Authenticated user
+2021-04-18 07:51:26.023 DEBUG --- [nio-8080-exec-6] .s.s.l.AbstractInterfaceLogger 166 : HTTP headers: authorization=***;user-agent=PostmanRuntime/7.26.10;accept=*/*;postman-token=a3f672fb-6057-49a8-a684-e970777df4c1;host=localhost:8080;accept-encoding=gzip, deflate, br;connection=keep-alive;cookie=JSESSIONID=47FCA9FF0324D22EB5BE30D271872E9E;
+2021-04-18 07:51:26.024 DEBUG --- [nio-8080-exec-6] .s.s.l.AbstractInterfaceLogger  57 : >>> | 172.21.0.1 | null | user: admin | host: webservice | system: auth-controller | eventId: 1 | event: authenticateUsingGET | null 
+2021-04-18 07:51:26.682 DEBUG --- [nio-8080-exec-6] .s.s.l.AbstractInterfaceLogger 166 : HTTP headers: authorization=***;user-agent=PostmanRuntime/7.26.10;accept=*/*;postman-token=a3f672fb-6057-49a8-a684-e970777df4c1;host=localhost:8080;accept-encoding=gzip, deflate, br;connection=keep-alive;cookie=JSESSIONID=47FCA9FF0324D22EB5BE30D271872E9E;
+2021-04-18 07:51:26.683 DEBUG --- [nio-8080-exec-6] .s.s.l.AbstractInterfaceLogger  73 : <<< | 172.21.0.1 | null | user: admin | host: webservice | system: auth-controller | eventId: 1 | event: authenticateUsingGET | SUCCESS
+```
+
+Just perfect!
+

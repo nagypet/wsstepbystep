@@ -56,7 +56,7 @@ services:
         image: webservice
         environment:
               - JAVA_OPTS=
-              - WEBSERVICE_OPTS=-Dspring.profiles.active=default
+              - WEBSERVICE_OPTS=-Dspring.profiles.active=devdocker
         ports:
             - "8080:8080"
         networks: 
