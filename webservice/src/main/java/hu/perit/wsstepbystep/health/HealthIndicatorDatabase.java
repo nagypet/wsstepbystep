@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.concurrent.TimeoutException;
 
+import org.apache.commons.lang3.BooleanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.actuate.health.AbstractHealthIndicator;
 import org.springframework.boot.actuate.health.Health;
@@ -21,6 +22,8 @@ public class HealthIndicatorDatabase extends AbstractHealthIndicator
     @Autowired
     private NativeQueryRepo nativeQueryRepo;
 
+    private TimeoutLatch timeoutLatch = new TimeoutLatch();
+
     @Override
     protected void doHealthCheck(Health.Builder builder) throws Exception
     {
@@ -29,8 +32,8 @@ public class HealthIndicatorDatabase extends AbstractHealthIndicator
 
         try
         {
-            boolean dbUpAndRunning = AsyncExecutor.invoke(this::checkDbUpAndRunning, null);
-            if (dbUpAndRunning)
+            Boolean dbUpAndRunning = AsyncExecutor.invoke(this::checkDbUpAndRunning, null);
+            if (BooleanUtils.isTrue(dbUpAndRunning))
             {
                 builder.up();
                 builder.withDetail("Status", "Database server is up and running");
@@ -49,6 +52,7 @@ public class HealthIndicatorDatabase extends AbstractHealthIndicator
         }
         catch (TimeoutException ex)
         {
+            this.timeoutLatch.setClosed();
             log.error("Health check failed: the database server cannot be reached!");
             builder.down();
             builder.withDetail("Status", "Database server cannot be reached!");
@@ -56,8 +60,13 @@ public class HealthIndicatorDatabase extends AbstractHealthIndicator
     }
 
 
-    private boolean checkDbUpAndRunning()
+    private Boolean checkDbUpAndRunning()
     {
+        if (this.timeoutLatch.isClosed())
+        {
+            return null;
+        }
+
         Object result = this.nativeQueryRepo.getSingleResult("SELECT 1", false);
         return result instanceof Integer && ((Integer) result).equals(1);
     }
