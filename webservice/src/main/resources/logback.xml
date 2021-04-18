@@ -47,7 +47,10 @@
 	<!-- Application specific loggers -->
 	<logger name="hu.perit.wsstepbystep" level="DEBUG" additivity="false">
 		<appender-ref ref="application-message"/>
-	</logger>
+	</logger>	
+	<logger name="hu.perit.spvitamin.core.took" level="DEBUG" additivity="false">
+		<appender-ref ref="application-message"/>
+	</logger>	
 	<logger name="hu.perit.spvitamin.spring.manifest" level="DEBUG" additivity="false">
 		<appender-ref ref="application-message"/>
 	</logger>	

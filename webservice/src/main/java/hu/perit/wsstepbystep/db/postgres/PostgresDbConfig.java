@@ -62,7 +62,7 @@ public class PostgresDbConfig
     static final String ENTITY_MANAGER_FACTORY = "entityManagerFactory";
     static final String TRANSACTION_MANAGER = "transactionManager";
 
-    private static final String PERSISTENCE_UNIT = "postgres";
+    public static final String PERSISTENCE_UNIT = "postgres";
     private static final String DATASOURCE = "dataSource";
 
     private final ConnectionParam connectionParam;
