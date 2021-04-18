@@ -6,6 +6,7 @@ import java.util.concurrent.TimeoutException;
 
 import hu.perit.spvitamin.core.timeoutlatch.TimeoutLatch;
 import hu.perit.spvitamin.spring.config.SysConfig;
+import org.apache.commons.lang3.BooleanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.actuate.health.AbstractHealthIndicator;
 import org.springframework.boot.actuate.health.Health;
