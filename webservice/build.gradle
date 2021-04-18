@@ -54,6 +54,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
     
     // JJWT
     implementation group: 'io.jsonwebtoken', name: 'jjwt', version: '0.9.1'
@@ -82,6 +83,9 @@ dependencies {
     // ModelMapper
     implementation group: 'org.modelmapper.extensions', name: 'modelmapper-spring', version: '2.3.5'
 
+    // Micrometer Prometheus plugin
+    implementation group: 'io.micrometer', name: 'micrometer-registry-prometheus', version: '1.5.3'
+	
     // PostgreSQL
     runtimeOnly 'org.postgresql:postgresql'
 
