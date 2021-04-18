@@ -837,3 +837,24 @@ https://www.localhost.hu:8080/actuator/metrics/wsstepbystep.bookcount
 
 Also we have included the health status as well, so that it can be monitored with Prometheus.
 
+## step23 Installing Prometheus and Grafana
+
+Building the images:
+
+```
+c:\np\github\wsstepbystep>gradlew clean doI -x test
+```
+
+Starting the docker swarm:
+
+```
+c:\np\github\wsstepbystep\docker-compose\dev>coU --all
+```
+
+Grafana: localhost:3000, admin/admin
+Prometheus: localhost:9090
+
+The port of the webservice application had to changed to 8400, because 8080 was already occuped by cAdvisor.
+
+Enjoy!
+

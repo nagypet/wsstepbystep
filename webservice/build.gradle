@@ -90,6 +90,9 @@ dependencies {
     // ModelMapper
     implementation group: 'org.modelmapper.extensions', name: 'modelmapper-spring', version: '2.3.5'
 
+    // Micrometer Prometheus plugin
+    implementation group: 'io.micrometer', name: 'micrometer-registry-prometheus', version: '1.5.3'
+
     // PostgreSQL
     runtimeOnly 'org.postgresql:postgresql'
 
