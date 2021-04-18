@@ -487,3 +487,421 @@ class TimeoutLatch
     }
 }
 ```
+
+## step22: Monitoring - creating an application specific monitoring andpoint
+
+We already have the metrics and prometheus endpoints out of the box.
+
+https://www.localhost.hu:8080/actuator/metrics
+```
+{
+   "names":[
+      "hikaricp.connections",
+      "hikaricp.connections.acquire",
+      "hikaricp.connections.active",
+      "hikaricp.connections.creation",
+      "hikaricp.connections.idle",
+      "hikaricp.connections.max",
+      "hikaricp.connections.min",
+      "hikaricp.connections.pending",
+      "hikaricp.connections.timeout",
+      "hikaricp.connections.usage",
+      "http.server.requests",
+      "jdbc.connections.active",
+      "jdbc.connections.idle",
+      "jdbc.connections.max",
+      "jdbc.connections.min",
+      "jvm.buffer.count",
+      "jvm.buffer.memory.used",
+      "jvm.buffer.total.capacity",
+      "jvm.classes.loaded",
+      "jvm.classes.unloaded",
+      "jvm.gc.live.data.size",
+      "jvm.gc.max.data.size",
+      "jvm.gc.memory.allocated",
+      "jvm.gc.memory.promoted",
+      "jvm.gc.pause",
+      "jvm.memory.committed",
+      "jvm.memory.max",
+      "jvm.memory.used",
+      "jvm.threads.daemon",
+      "jvm.threads.live",
+      "jvm.threads.peak",
+      "jvm.threads.states",
+      "logback.events",
+      "process.cpu.usage",
+      "process.start.time",
+      "process.uptime",
+      "system.cpu.count",
+      "system.cpu.usage",
+      "tomcat.sessions.active.current",
+      "tomcat.sessions.active.max",
+      "tomcat.sessions.alive.max",
+      "tomcat.sessions.created",
+      "tomcat.sessions.expired",
+      "tomcat.sessions.rejected"
+   ]
+}
+```
+
+https://www.localhost.hu:8080/actuator/prometheus
+```
+# HELP jvm_threads_daemon_threads The current number of live daemon threads
+# TYPE jvm_threads_daemon_threads gauge
+jvm_threads_daemon_threads 21.0
+# HELP system_cpu_usage The "recent cpu usage" for the whole system
+# TYPE system_cpu_usage gauge
+system_cpu_usage 0.0
+# HELP hikaricp_connections Total connections
+# TYPE hikaricp_connections gauge
+hikaricp_connections{pool="HikariPool-1",} 10.0
+# HELP jvm_memory_max_bytes The maximum amount of memory in bytes that can be used for memory management
+# TYPE jvm_memory_max_bytes gauge
+jvm_memory_max_bytes{area="nonheap",id="CodeHeap 'profiled nmethods'",} 1.2288E8
+jvm_memory_max_bytes{area="heap",id="G1 Survivor Space",} -1.0
+jvm_memory_max_bytes{area="heap",id="G1 Old Gen",} 5.36870912E8
+jvm_memory_max_bytes{area="nonheap",id="Metaspace",} -1.0
+jvm_memory_max_bytes{area="nonheap",id="CodeHeap 'non-nmethods'",} 5898240.0
+jvm_memory_max_bytes{area="heap",id="G1 Eden Space",} -1.0
+jvm_memory_max_bytes{area="nonheap",id="Compressed Class Space",} 1.073741824E9
+jvm_memory_max_bytes{area="nonheap",id="CodeHeap 'non-profiled nmethods'",} 1.2288E8
+# HELP jvm_threads_states_threads The current number of threads having NEW state
+# TYPE jvm_threads_states_threads gauge
+jvm_threads_states_threads{state="runnable",} 8.0
+jvm_threads_states_threads{state="blocked",} 0.0
+jvm_threads_states_threads{state="waiting",} 17.0
+jvm_threads_states_threads{state="timed-waiting",} 5.0
+jvm_threads_states_threads{state="new",} 0.0
+jvm_threads_states_threads{state="terminated",} 0.0
+# HELP process_start_time_seconds Start time of the process since unix epoch.
+# TYPE process_start_time_seconds gauge
+process_start_time_seconds 1.61872741584E9
+# HELP hikaricp_connections_creation_seconds_max Connection creation time
+# TYPE hikaricp_connections_creation_seconds_max gauge
+hikaricp_connections_creation_seconds_max{pool="HikariPool-1",} 0.0
+# HELP hikaricp_connections_creation_seconds Connection creation time
+# TYPE hikaricp_connections_creation_seconds summary
+hikaricp_connections_creation_seconds_count{pool="HikariPool-1",} 0.0
+hikaricp_connections_creation_seconds_sum{pool="HikariPool-1",} 0.0
+# HELP jvm_gc_memory_promoted_bytes_total Count of positive increases in the size of the old generation memory pool before GC to after GC
+# TYPE jvm_gc_memory_promoted_bytes_total counter
+jvm_gc_memory_promoted_bytes_total 1.8002944E7
+# HELP jvm_buffer_total_capacity_bytes An estimate of the total capacity of the buffers in this pool
+# TYPE jvm_buffer_total_capacity_bytes gauge
+jvm_buffer_total_capacity_bytes{id="mapped",} 0.0
+jvm_buffer_total_capacity_bytes{id="direct",} 169210.0
+# HELP hikaricp_connections_active Active connections
+# TYPE hikaricp_connections_active gauge
+hikaricp_connections_active{pool="HikariPool-1",} 0.0
+# HELP jdbc_connections_active Current number of active connections that have been allocated from the data source.
+# TYPE jdbc_connections_active gauge
+jdbc_connections_active{name="dataSource",} 0.0
+# HELP jvm_gc_memory_allocated_bytes_total Incremented for an increase in the size of the (young) heap memory pool after one GC to before the next
+# TYPE jvm_gc_memory_allocated_bytes_total counter
+jvm_gc_memory_allocated_bytes_total 3.85875968E8
+# HELP hikaricp_connections_idle Idle connections
+# TYPE hikaricp_connections_idle gauge
+hikaricp_connections_idle{pool="HikariPool-1",} 10.0
+# HELP tomcat_sessions_active_current_sessions  
+# TYPE tomcat_sessions_active_current_sessions gauge
+tomcat_sessions_active_current_sessions 0.0
+# HELP system_cpu_count The number of processors available to the Java virtual machine
+# TYPE system_cpu_count gauge
+system_cpu_count 8.0
+# HELP jvm_memory_committed_bytes The amount of memory in bytes that is committed for the Java virtual machine to use
+# TYPE jvm_memory_committed_bytes gauge
+jvm_memory_committed_bytes{area="nonheap",id="CodeHeap 'profiled nmethods'",} 1.5990784E7
+jvm_memory_committed_bytes{area="heap",id="G1 Survivor Space",} 0.0
+jvm_memory_committed_bytes{area="heap",id="G1 Old Gen",} 5.6623104E7
+jvm_memory_committed_bytes{area="nonheap",id="Metaspace",} 8.8436736E7
+jvm_memory_committed_bytes{area="nonheap",id="CodeHeap 'non-nmethods'",} 2555904.0
+jvm_memory_committed_bytes{area="heap",id="G1 Eden Space",} 5.8720256E7
+jvm_memory_committed_bytes{area="nonheap",id="Compressed Class Space",} 1.2054528E7
+jvm_memory_committed_bytes{area="nonheap",id="CodeHeap 'non-profiled nmethods'",} 5439488.0
+# HELP jvm_gc_max_data_size_bytes Max size of long-lived heap memory pool
+# TYPE jvm_gc_max_data_size_bytes gauge
+jvm_gc_max_data_size_bytes 5.36870912E8
+# HELP jvm_classes_loaded_classes The number of classes that are currently loaded in the Java virtual machine
+# TYPE jvm_classes_loaded_classes gauge
+jvm_classes_loaded_classes 15819.0
+# HELP hikaricp_connections_max Max connections
+# TYPE hikaricp_connections_max gauge
+hikaricp_connections_max{pool="HikariPool-1",} 10.0
+# HELP tomcat_sessions_expired_sessions_total  
+# TYPE tomcat_sessions_expired_sessions_total counter
+tomcat_sessions_expired_sessions_total 0.0
+# HELP jvm_buffer_memory_used_bytes An estimate of the memory that the Java virtual machine is using for this buffer pool
+# TYPE jvm_buffer_memory_used_bytes gauge
+jvm_buffer_memory_used_bytes{id="mapped",} 0.0
+jvm_buffer_memory_used_bytes{id="direct",} 169210.0
+# HELP jvm_buffer_count_buffers An estimate of the number of buffers in the pool
+# TYPE jvm_buffer_count_buffers gauge
+jvm_buffer_count_buffers{id="mapped",} 0.0
+jvm_buffer_count_buffers{id="direct",} 10.0
+# HELP jvm_threads_peak_threads The peak live thread count since the Java virtual machine started or peak was reset
+# TYPE jvm_threads_peak_threads gauge
+jvm_threads_peak_threads 30.0
+# HELP process_uptime_seconds The uptime of the Java virtual machine
+# TYPE process_uptime_seconds gauge
+process_uptime_seconds 380.901
+# HELP jvm_classes_unloaded_classes_total The total number of classes unloaded since the Java virtual machine has started execution
+# TYPE jvm_classes_unloaded_classes_total counter
+jvm_classes_unloaded_classes_total 1.0
+# HELP hikaricp_connections_timeout_total Connection timeout total count
+# TYPE hikaricp_connections_timeout_total counter
+hikaricp_connections_timeout_total{pool="HikariPool-1",} 0.0
+# HELP jdbc_connections_idle Number of established but idle connections.
+# TYPE jdbc_connections_idle gauge
+jdbc_connections_idle{name="dataSource",} 10.0
+# HELP jdbc_connections_min Minimum number of idle connections in the pool.
+# TYPE jdbc_connections_min gauge
+jdbc_connections_min{name="dataSource",} 10.0
+# HELP logback_events_total Number of error level events that made it to the logs
+# TYPE logback_events_total counter
+logback_events_total{level="warn",} 1.0
+logback_events_total{level="debug",} 1.0
+logback_events_total{level="error",} 0.0
+logback_events_total{level="trace",} 0.0
+logback_events_total{level="info",} 3.0
+# HELP jvm_memory_used_bytes The amount of used memory
+# TYPE jvm_memory_used_bytes gauge
+jvm_memory_used_bytes{area="nonheap",id="CodeHeap 'profiled nmethods'",} 1.3789696E7
+jvm_memory_used_bytes{area="heap",id="G1 Survivor Space",} 0.0
+jvm_memory_used_bytes{area="heap",id="G1 Old Gen",} 3.4326728E7
+jvm_memory_used_bytes{area="nonheap",id="Metaspace",} 8.612576E7
+jvm_memory_used_bytes{area="nonheap",id="CodeHeap 'non-nmethods'",} 1295616.0
+jvm_memory_used_bytes{area="heap",id="G1 Eden Space",} 1.3631488E7
+jvm_memory_used_bytes{area="nonheap",id="Compressed Class Space",} 1.1102224E7
+jvm_memory_used_bytes{area="nonheap",id="CodeHeap 'non-profiled nmethods'",} 4186624.0
+# HELP tomcat_sessions_created_sessions_total  
+# TYPE tomcat_sessions_created_sessions_total counter
+tomcat_sessions_created_sessions_total 0.0
+# HELP jvm_gc_pause_seconds Time spent in GC pause
+# TYPE jvm_gc_pause_seconds summary
+jvm_gc_pause_seconds_count{action="end of major GC",cause="System.gc()",} 7.0
+jvm_gc_pause_seconds_sum{action="end of major GC",cause="System.gc()",} 0.428
+jvm_gc_pause_seconds_count{action="end of minor GC",cause="Metadata GC Threshold",} 1.0
+jvm_gc_pause_seconds_sum{action="end of minor GC",cause="Metadata GC Threshold",} 0.007
+jvm_gc_pause_seconds_count{action="end of minor GC",cause="G1 Evacuation Pause",} 6.0
+jvm_gc_pause_seconds_sum{action="end of minor GC",cause="G1 Evacuation Pause",} 0.099
+# HELP jvm_gc_pause_seconds_max Time spent in GC pause
+# TYPE jvm_gc_pause_seconds_max gauge
+jvm_gc_pause_seconds_max{action="end of major GC",cause="System.gc()",} 0.059
+jvm_gc_pause_seconds_max{action="end of minor GC",cause="Metadata GC Threshold",} 0.0
+jvm_gc_pause_seconds_max{action="end of minor GC",cause="G1 Evacuation Pause",} 0.0
+# HELP jvm_gc_live_data_size_bytes Size of long-lived heap memory pool after reclamation
+# TYPE jvm_gc_live_data_size_bytes gauge
+jvm_gc_live_data_size_bytes 3.4326728E7
+# HELP tomcat_sessions_active_max_sessions  
+# TYPE tomcat_sessions_active_max_sessions gauge
+tomcat_sessions_active_max_sessions 0.0
+# HELP hikaricp_connections_pending Pending threads
+# TYPE hikaricp_connections_pending gauge
+hikaricp_connections_pending{pool="HikariPool-1",} 0.0
+# HELP hikaricp_connections_acquire_seconds Connection acquire time
+# TYPE hikaricp_connections_acquire_seconds summary
+hikaricp_connections_acquire_seconds_count{pool="HikariPool-1",} 2.0
+hikaricp_connections_acquire_seconds_sum{pool="HikariPool-1",} 0.0028594
+# HELP hikaricp_connections_acquire_seconds_max Connection acquire time
+# TYPE hikaricp_connections_acquire_seconds_max gauge
+hikaricp_connections_acquire_seconds_max{pool="HikariPool-1",} 0.0
+# HELP tomcat_sessions_alive_max_seconds  
+# TYPE tomcat_sessions_alive_max_seconds gauge
+tomcat_sessions_alive_max_seconds 0.0
+# HELP hikaricp_connections_usage_seconds Connection usage time
+# TYPE hikaricp_connections_usage_seconds summary
+hikaricp_connections_usage_seconds_count{pool="HikariPool-1",} 2.0
+hikaricp_connections_usage_seconds_sum{pool="HikariPool-1",} 0.002
+# HELP hikaricp_connections_usage_seconds_max Connection usage time
+# TYPE hikaricp_connections_usage_seconds_max gauge
+hikaricp_connections_usage_seconds_max{pool="HikariPool-1",} 0.0
+# HELP jdbc_connections_max Maximum number of active connections that can be allocated at the same time.
+# TYPE jdbc_connections_max gauge
+jdbc_connections_max{name="dataSource",} 10.0
+# HELP hikaricp_connections_min Min connections
+# TYPE hikaricp_connections_min gauge
+hikaricp_connections_min{pool="HikariPool-1",} 10.0
+# HELP http_server_requests_seconds  
+# TYPE http_server_requests_seconds summary
+http_server_requests_seconds_count{exception="None",method="GET",outcome="SUCCESS",status="200",uri="/actuator/metrics",} 1.0
+http_server_requests_seconds_sum{exception="None",method="GET",outcome="SUCCESS",status="200",uri="/actuator/metrics",} 0.0090145
+http_server_requests_seconds_count{exception="None",method="GET",outcome="SUCCESS",status="200",uri="/actuator/health",} 1.0
+http_server_requests_seconds_sum{exception="None",method="GET",outcome="SUCCESS",status="200",uri="/actuator/health",} 0.2302241
+http_server_requests_seconds_count{exception="None",method="GET",outcome="SUCCESS",status="200",uri="/**",} 1.0
+http_server_requests_seconds_sum{exception="None",method="GET",outcome="SUCCESS",status="200",uri="/**",} 0.0720974
+http_server_requests_seconds_count{exception="None",method="GET",outcome="SUCCESS",status="200",uri="/actuator",} 2.0
+http_server_requests_seconds_sum{exception="None",method="GET",outcome="SUCCESS",status="200",uri="/actuator",} 0.0186887
+# HELP http_server_requests_seconds_max  
+# TYPE http_server_requests_seconds_max gauge
+http_server_requests_seconds_max{exception="None",method="GET",outcome="SUCCESS",status="200",uri="/actuator/metrics",} 0.0090145
+http_server_requests_seconds_max{exception="None",method="GET",outcome="SUCCESS",status="200",uri="/actuator/health",} 0.0
+http_server_requests_seconds_max{exception="None",method="GET",outcome="SUCCESS",status="200",uri="/**",} 0.0
+http_server_requests_seconds_max{exception="None",method="GET",outcome="SUCCESS",status="200",uri="/actuator",} 0.0142562
+# HELP jvm_threads_live_threads The current number of live threads including both daemon and non-daemon threads
+# TYPE jvm_threads_live_threads gauge
+jvm_threads_live_threads 30.0
+# HELP tomcat_sessions_rejected_sessions_total  
+# TYPE tomcat_sessions_rejected_sessions_total counter
+tomcat_sessions_rejected_sessions_total 0.0
+# HELP process_cpu_usage The "recent cpu usage" for the Java Virtual Machine process
+# TYPE process_cpu_usage gauge
+process_cpu_usage 0.2067119764619553
+```
+
+Cool. But now we want to implement an application specific monitoring endpoint. Let's assume we want to monitor the count of books created. All we have to do, is ti implement a service that will provide the count of books.
+
+```
+@Slf4j
+@Service
+public class MetricsProviderService
+{
+    @Autowired
+    private BookRepo bookRepo;
+
+    private TimeoutLatch timeoutLatch = new TimeoutLatch();
+
+    public double getBookCount()
+    {
+        try
+        {
+            long bookCount = AsyncExecutor.invoke(this::getTotalBookCount, null);
+            return (double) bookCount;
+        }
+        catch (TimeoutException ex)
+        {
+            this.timeoutLatch.setClosed();
+            log.error(String.format("getTotalBookCount() did not complete within %d ms! The database is not reachable or slow!",
+                SysConfig.getMetricsProperties().getTimeoutMillis()));
+        }
+
+        return 0.0;
+    }
+
+
+    private long getTotalBookCount()
+    {
+        if (this.timeoutLatch.isClosed())
+        {
+            return 0;
+        }
+
+        return bookRepo.count();
+    }
+}
+```
+
+Now, we have to include the new metric in the Micrometer metrics service.
+
+```
+@Service
+@Getter
+public class MicrometerMetricsService
+{
+    private final List<AbstractHealthIndicator> indicators;
+
+
+    public MicrometerMetricsService(MeterRegistry registry, MetricsProviderService myMetricProvider, HealthIndicatorDatabase healthIndicatorDatabase)
+    {
+        final String METRIC_BOOK_COUNT = Constants.SUBSYSTEM_NAME.toLowerCase() + ".bookcount";
+        final String METRIC_HEALTH = Constants.SUBSYSTEM_NAME.toLowerCase() + ".health";
+
+        Gauge.builder(METRIC_BOOK_COUNT, myMetricProvider, MetricsProviderService::getBookCount).description(
+            "The current count of books").baseUnit("pcs").register(registry);
+
+        indicators = List.of(healthIndicatorDatabase);
+        Gauge.builder(METRIC_HEALTH, indicators, MicrometerMetricsService::healthToCode).description(
+            "The current value of the health endpoint").register(registry);
+    }
+
+
+    private static int healthToCode(List<AbstractHealthIndicator> indicators)
+    {
+        for (AbstractHealthIndicator indicator : indicators)
+        {
+            Status status = indicator.health().getStatus();
+            if (status.equals(Status.DOWN))
+            {
+                return 0;
+            }
+        }
+
+        return 1;
+    }
+}
+```
+
+That's it! Let's check the list of metrics again.
+
+```
+{
+   "names":[
+      "hikaricp.connections",
+      "hikaricp.connections.acquire",
+      "hikaricp.connections.active",
+      "hikaricp.connections.creation",
+      "hikaricp.connections.idle",
+      "hikaricp.connections.max",
+      "hikaricp.connections.min",
+      "hikaricp.connections.pending",
+      "hikaricp.connections.timeout",
+      "hikaricp.connections.usage",
+      "http.server.requests",
+      "jdbc.connections.active",
+      "jdbc.connections.idle",
+      "jdbc.connections.max",
+      "jdbc.connections.min",
+      "jvm.buffer.count",
+      "jvm.buffer.memory.used",
+      "jvm.buffer.total.capacity",
+      "jvm.classes.loaded",
+      "jvm.classes.unloaded",
+      "jvm.gc.live.data.size",
+      "jvm.gc.max.data.size",
+      "jvm.gc.memory.allocated",
+      "jvm.gc.memory.promoted",
+      "jvm.gc.pause",
+      "jvm.memory.committed",
+      "jvm.memory.max",
+      "jvm.memory.used",
+      "jvm.threads.daemon",
+      "jvm.threads.live",
+      "jvm.threads.peak",
+      "jvm.threads.states",
+      "logback.events",
+      "process.cpu.usage",
+      "process.start.time",
+      "process.uptime",
+      "system.cpu.count",
+      "system.cpu.usage",
+      "tomcat.sessions.active.current",
+      "tomcat.sessions.active.max",
+      "tomcat.sessions.alive.max",
+      "tomcat.sessions.created",
+      "tomcat.sessions.expired",
+      "tomcat.sessions.rejected",
+      "wsstepbystep.bookcount",
+      "wsstepbystep.health"
+   ]
+}
+```
+
+https://www.localhost.hu:8080/actuator/metrics/wsstepbystep.bookcount
+```
+{
+   "name":"wsstepbystep.bookcount",
+   "description":"The current count of books",
+   "baseUnit":"pcs",
+   "measurements":[
+      {
+         "statistic":"VALUE",
+         "value":5
+      }
+   ],
+   "availableTags":[
+      
+   ]
+}
+```
+
+Also we have included the health status as well, so that it can be monitored with Prometheus.
+
