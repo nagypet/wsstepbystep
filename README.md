@@ -27,6 +27,7 @@ What is this project all about? Step by step, I show you how to do a production-
 * step21: Improving the health endpoint even further
 * step22: Monitoring - creating an application specific monitoring endpoint
 * step23: Installing Prometheus and Grafana
+* step24: Retry on database connection failure
 
 
 # Branches
@@ -956,4 +957,110 @@ Prometheus: localhost:9090
 The port of the webservice application had to changed to 8400, because 8080 was already occuped by cAdvisor.
 
 Enjoy!
+
+## step24: Retry on database connection failure
+
+The thing about databases is that they never run on localhost, but on a dedicated database host. It follows that we need to access the database over a network. Be prepared for possible network failures, short-term network outages must be tolerated by the system. To achieve this, we have the retry mechanism of the spring framework.
+
+You need the following steps:
+
+* Use Hikari connection pool
+* Set the `hibernate.connection.handling_mode` to `PhysicalConnectionHandlingMode.DELAYED_ACQUISITION_AND_RELEASE_AFTER_TRANSACTION`
+* Apply the @EnableRetry annotation on your Application
+
+
+```Java
+@SpringBootApplication
+@ComponentScan(basePackages = {"hu.perit.spvitamin", "hu.perit.wsstepbystep"})
+@EnableRetry <==
+public class WsstepbystepApplication
+{
+
+    public static void main(String[] args)
+    {
+        SpringApplication application = new SpringApplication(WsstepbystepApplication.class);
+        application.addListeners(new EnvironmentPostProcessor());
+        application.run(args);
+    }
+
+}
+```
+
+Additional dependencies needed:
+
+```
+implementation 'org.springframework.retry:spring-retry:1.3.1'
+```
+
+Our DynamicDataSource implements a retry behavior as follows:
+
+```Java
+@Slf4j
+public class DynamicDataSource implements DataSource, Closeable
+{
+
+	...
+	
+    @Override
+    @Retryable(maxAttempts = 4, backoff = @Backoff(delay = 10_000, multiplier = 2.0, maxDelay = 60_000))
+    public Connection getConnection() throws SQLException
+    {
+        if (!this.initialized)
+        {
+            throw new SQLException("Data source connection parameter is not set!");
+        }
+
+        try
+        {
+            Connection connection = this.dataSource.getConnection();
+            log.debug("DynamicDataSource created a new Connection.");
+            this.connected = true;
+            return connection;
+        }
+        catch (SQLException ex)
+        {
+            log.error(ex.toString());
+            this.connected = false;
+            throw ex;
+        }
+    }
+
+    @Override
+    @Retryable(maxAttempts = 4, backoff = @Backoff(delay = 10_000, multiplier = 2.0, maxDelay = 60_000))
+    public Connection getConnection(String username, String password) throws SQLException
+    {
+        try
+        {
+            Connection connection = this.dataSource.getConnection(username, password);
+            log.debug("DynamicDataSource created a new Connection.");
+            this.connected = true;
+            return connection;
+        }
+        catch (SQLException ex)
+        {
+            log.error(ex.toString());
+            this.connected = false;
+            throw ex;
+        }
+    }
+```
+
+See in `PostgresDbConfig.java`:
+```
+    @Primary
+    @Bean(name = ENTITY_MANAGER_FACTORY)
+    public LocalContainerEntityManagerFactoryBean entityManagerFactory(EntityManagerFactoryBuilder builder,
+        @Qualifier(DATASOURCE) DataSource dataSource)
+    {
+        Map<String, String> properties = new HashMap<>();
+        properties.put("hibernate.dialect", this.connectionParam.getDialect());
+        properties.put("hibernate.connection.handling_mode",
+            PhysicalConnectionHandlingMode.DELAYED_ACQUISITION_AND_RELEASE_AFTER_TRANSACTION.name()); <==
+        properties.put("hibernate.hbm2ddl.auto", this.connectionParam.getDdlAuto());
+
+        return builder.dataSource(dataSource).packages(PACKAGES).persistenceUnit(PERSISTENCE_UNIT).properties(properties).build();
+    }
+```
+
+How it works? The option DELAYED_ACQUISITION_AND_RELEASE_AFTER_TRANSACTION causes the connection pool to release the connection after each transaction. In this case, the pool creates a new physical connection to the database before each transaction. So if the database gets unavailable, a call of our DataSource object's getConnection() method times out and throws an exception. As a result of the @Retryable annotation, the spring framework repeats the connection attempt after the set delay. The DynamicDataSource is set to 4 attempts that results a total timeout of 90 seconds. If the database connection is restored within this time, the connection will be established and the SQL operation will succeed.
 
