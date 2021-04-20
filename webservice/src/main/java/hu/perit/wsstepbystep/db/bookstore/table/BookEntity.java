@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-package hu.perit.wsstepbystep.db.postgres.table;
+package hu.perit.wsstepbystep.db.bookstore.table;
 
+import java.time.LocalDate;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -26,6 +26,8 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
@@ -34,8 +36,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
- * #know-how:jpa-auditing
- *
  * @author Peter Nagy
  */
 
@@ -43,27 +43,39 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @Entity
-@Table(name = "author", schema = "bookstore")
-public class AuthorEntity extends BaseEntity
+@Table(name = "book", schema = "bookstore")
+public class BookEntity extends BaseEntity
 {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "author_id", nullable = false, columnDefinition = "bigserial")
+    @Column(name = "book_id", nullable = false, columnDefinition = "bigserial")
     private Long id;
 
-    @Column(name = "name")
-    private String name;
+    @Column(name = "title")
+    private String title;
 
-    // The inverse side of the many-to-many relationship
-    @ManyToMany(mappedBy = "authorEntities", fetch = FetchType.LAZY)
-    private Set<BookEntity> bookEntities = new HashSet<>();
+    @Column(name = "pages")
+    private Integer pages;
 
-    public Set<BookEntity> getBooks()
+    @Column(name = "date_issued")
+    private LocalDate dateIssued;
+
+    // The owning side of the many-to-many relationship
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "bookxauthor", schema = "bookstore", // 
+        joinColumns = {@JoinColumn(name = "book_id")}, //
+        inverseJoinColumns = {@JoinColumn(name = "author_id")} //
+    )
+    // Important to have a Set here! Hibernate will generate a composite primary key only when using a Set.
+    private Set<AuthorEntity> authorEntities;
+
+
+    public Set<AuthorEntity> getAuthors()
     {
-        if (this.bookEntities != null)
+        if (this.authorEntities != null)
         {
-            return this.bookEntities;
+            return this.authorEntities;
         }
 
         return Collections.emptySet();

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package hu.perit.wsstepbystep.db.postgres;
+package hu.perit.wsstepbystep.db.bookstore;
 
 import java.util.Optional;
 

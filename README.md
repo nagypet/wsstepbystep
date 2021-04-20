@@ -28,6 +28,8 @@ What is this project all about? Step by step, I show you how to do a production-
 * step22: Monitoring - creating an application specific monitoring endpoint
 * step23: Installing Prometheus and Grafana
 * step24: Retry on database connection failure
+* step25: Using SQL-Server instead of PostgreSQL
+
 
 
 # Branches
@@ -994,3 +996,12 @@ See in `PostgresDbConfig.java`:
 
 How it works? The option DELAYED_ACQUISITION_AND_RELEASE_AFTER_TRANSACTION causes the connection pool to release the connection after each transaction. In this case, the pool creates a new physical connection to the database before each transaction. So if the database gets unavailable, a call of our DataSource object's getConnection() method times out and throws an exception. As a result of the @Retryable annotation, the spring framework repeats the connection attempt after the set delay. The DynamicDataSource is set to 4 attempts that results a total timeout of 90 seconds. If the database connection is restored within this time, the connection will be established and the SQL operation will succeed.
 
+
+## step25: Using SQL-Server instead of PostgreSQL
+
+* Install SQL-Server Management Studio
+* Open a command line and change to docker-compose\sqlserver\
+* `c:\np\github\wsstepbystep\docker-compose\sqlserver>coU --db`
+* Open SSMS and connect to the db with sa/Passw0rd
+* Run the scripts in db\SQLServer\ in the given sequence, to prepare the database
+* Launch the webservice in the usual way

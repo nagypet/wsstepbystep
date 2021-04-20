@@ -96,6 +96,8 @@ dependencies {
 
     // PostgreSQL
     runtimeOnly 'org.postgresql:postgresql'
+    runtimeOnly 'com.microsoft.sqlserver:mssql-jdbc:8.2.1.jre11'
+    
 
     // Test framework
     testImplementation('org.springframework.boot:spring-boot-starter-test') {

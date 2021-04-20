@@ -1,0 +1,133 @@
+#docker compose for local development
+
+version: '3.6'
+
+networks:
+    back-tier-net:
+        driver: bridge
+    monitoring:
+        driver: bridge
+
+
+services: 
+
+    #####################################################################################                 
+    sqlserver:
+    #####################################################################################                 
+        container_name: sqlserver
+        image: mcr.microsoft.com/mssql/server:2017-latest
+        environment:
+            - ACCEPT_EULA=Y
+            - MSSQL_SA_PASSWORD=Passw0rd
+        ports:
+            - "1433:1433"
+        volumes:
+            - wsstepbystep_sqlserver:/var/opt/mssql
+        networks: 
+            - back-tier-net
+            
+  
+    #####################################################################################                 
+    webservice:
+    #####################################################################################                 
+        container_name: webservice
+        image: webservice
+        environment:
+              - JAVA_OPTS=
+              - WEBSERVICE_OPTS=-Dspring.profiles.active=dev-docker-sqlserver
+        ports:
+            - "8400:8400"
+        networks: 
+            - back-tier-net
+            - monitoring
+        hostname: 'webservice'
+
+
+    #####################################################################################                 
+    prometheus:
+    #####################################################################################                 
+        container_name: prometheus
+        image: wsstepbystep-prometheus
+        volumes:
+            - wsstepbystep_prometheus:/prometheus
+        command: 
+            - '--config.file=/etc/prometheus/prometheus.yml'
+            - '--storage.tsdb.path=/prometheus'
+            - '--web.console.libraries=/etc/prometheus/console_libraries'
+            - '--web.console.templates=/etc/prometheus/consoles'
+            - '--storage.tsdb.retention.time=200h'
+            - '--web.enable-lifecycle'
+        ports:
+            - '9090:9090'
+        networks: 
+            - monitoring
+        labels:
+            hu.perit.template.cluster: "monitoring"
+
+
+    #####################################################################################                 
+    nodeexporter:
+    #####################################################################################                 
+        image: prom/node-exporter:v0.18.1
+        container_name: nodeexporter
+        volumes:
+            - /proc:/host/proc:ro
+            - /sys:/host/sys:ro
+            - /:/rootfs:ro
+        command:
+            - '--path.procfs=/host/proc'
+            - '--path.rootfs=/rootfs'
+            - '--path.sysfs=/host/sys'
+            - '--collector.filesystem.ignored-mount-points=^/(sys|proc|dev|host|etc)($$|/)'
+        restart: unless-stopped
+        ports:
+            - '9100:9100'
+        networks: 
+            - monitoring
+        labels:
+            hu.perit.template.cluster: "monitoring"
+
+
+    #####################################################################################                 
+    cadvisor:
+    #####################################################################################                 
+        image: gcr.io/google-containers/cadvisor:v0.36.0
+        container_name: cadvisor
+        volumes:
+            - /:/rootfs:ro
+            - /var/run:/var/run:rw
+            - /sys:/sys:ro
+            - /var/lib/docker:/var/lib/docker:ro
+            - /cgroup:/cgroup:ro #doesn't work on MacOS only for Linux
+        restart: unless-stopped
+        ports:
+            - '8080:8080'
+        networks: 
+            - monitoring
+        labels:
+            hu.perit.template.cluster: "monitoring"
+
+
+    #####################################################################################                 
+    grafana:
+    #####################################################################################                 
+        container_name: grafana
+        image: wsstepbystep-grafana
+        volumes:
+            - wsstepbystep_grafana:/var/lib/grafana
+        ports:
+            - '3000:3000'
+        networks: 
+            - monitoring
+        depends_on:
+            - prometheus
+        labels:
+            hu.perit.template.cluster: "monitoring"
+
+  
+volumes:
+    wsstepbystep_sqlserver:
+    wsstepbystep_postgres:
+    wsstepbystep_pgadmin:
+    wsstepbystep_prometheus:
+    wsstepbystep_grafana:
