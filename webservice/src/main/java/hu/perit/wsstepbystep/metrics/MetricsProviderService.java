@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 
 import hu.perit.spvitamin.spring.config.SysConfig;
 import hu.perit.spvitamin.spring.metrics.AsyncExecutor;
-import hu.perit.wsstepbystep.db.postgres.repo.BookRepo;
+import hu.perit.wsstepbystep.db.bookstore.repo.BookRepo;
 import hu.perit.wsstepbystep.health.TimeoutLatch;
 import lombok.extern.slf4j.Slf4j;
 

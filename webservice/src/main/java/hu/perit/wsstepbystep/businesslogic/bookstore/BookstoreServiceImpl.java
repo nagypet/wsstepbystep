@@ -20,10 +20,10 @@ import hu.perit.webservice.rest.model.AuthorWithBooksDTO;
 import hu.perit.webservice.rest.model.BookDTO;
 import hu.perit.webservice.rest.model.BookParams;
 import hu.perit.wsstepbystep.businesslogic.api.BookstoreService;
-import hu.perit.wsstepbystep.db.postgres.repo.AuthorRepo;
-import hu.perit.wsstepbystep.db.postgres.repo.BookRepo;
-import hu.perit.wsstepbystep.db.postgres.table.AuthorEntity;
-import hu.perit.wsstepbystep.db.postgres.table.BookEntity;
+import hu.perit.wsstepbystep.db.bookstore.repo.AuthorRepo;
+import hu.perit.wsstepbystep.db.bookstore.repo.BookRepo;
+import hu.perit.wsstepbystep.db.bookstore.table.AuthorEntity;
+import hu.perit.wsstepbystep.db.bookstore.table.BookEntity;
 
 @Service
 public class BookstoreServiceImpl implements BookstoreService

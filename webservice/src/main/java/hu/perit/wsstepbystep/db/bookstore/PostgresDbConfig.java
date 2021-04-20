@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package hu.perit.wsstepbystep.db.postgres;
+package hu.perit.wsstepbystep.db.bookstore;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -58,11 +58,11 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class PostgresDbConfig
 {
-    static final String PACKAGES = "hu.perit.wsstepbystep.db.postgres";
+    static final String PACKAGES = "hu.perit.wsstepbystep.db.bookstore";
     static final String ENTITY_MANAGER_FACTORY = "entityManagerFactory";
     static final String TRANSACTION_MANAGER = "transactionManager";
 
-    public static final String PERSISTENCE_UNIT = "postgres";
+    public static final String PERSISTENCE_UNIT = "bookstore";
     private static final String DATASOURCE = "dataSource";
 
     private final ConnectionParam connectionParam;

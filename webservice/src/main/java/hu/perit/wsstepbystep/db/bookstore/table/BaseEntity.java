@@ -1,4 +1,4 @@
-package hu.perit.wsstepbystep.db.postgres.table;
+package hu.perit.wsstepbystep.db.bookstore.table;
 
 import java.time.LocalDateTime;
 

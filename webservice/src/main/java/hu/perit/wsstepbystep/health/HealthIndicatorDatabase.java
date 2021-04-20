@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 
 import hu.perit.spvitamin.spring.config.Constants;
 import hu.perit.spvitamin.spring.metrics.AsyncExecutor;
-import hu.perit.wsstepbystep.db.postgres.repo.NativeQueryRepo;
+import hu.perit.wsstepbystep.db.bookstore.repo.NativeQueryRepo;
 import lombok.extern.slf4j.Slf4j;
 
 @Component

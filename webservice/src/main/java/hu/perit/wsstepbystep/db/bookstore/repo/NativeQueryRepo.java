@@ -1,4 +1,4 @@
-package hu.perit.wsstepbystep.db.postgres.repo;
+package hu.perit.wsstepbystep.db.bookstore.repo;
 
 import java.util.List;
 
@@ -11,7 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import hu.perit.spvitamin.spring.data.config.DatasourceCollectionProperties;
 import hu.perit.spvitamin.spring.data.config.DatasourceProperties;
 import hu.perit.spvitamin.spring.data.nativequery.NativeQueryRepoImpl;
-import hu.perit.wsstepbystep.db.postgres.PostgresDbConfig;
+import hu.perit.wsstepbystep.db.bookstore.PostgresDbConfig;
 
 @Repository
 public class NativeQueryRepo
