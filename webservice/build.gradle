@@ -96,9 +96,7 @@ dependencyManagement {
 test {
 	useJUnitPlatform()
 }
-integtest {
-    useJUnitPlatform()
-}
+
 
 dockerImage() {
 	dependsOn 'dockerBackendImage'
