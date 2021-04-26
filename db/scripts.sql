@@ -3,6 +3,31 @@ CREATE SCHEMA IF NOT EXISTS bookstore AUTHORIZATION postgres;
 SET default_tablespace = 'pg_default';
 
 
+CREATE SEQUENCE bookstore.author_author_id_seq;
+
+ALTER SEQUENCE bookstore.author_author_id_seq
+    OWNER TO postgres;
+	
+
+CREATE SEQUENCE bookstore.book_book_id_seq;
+
+ALTER SEQUENCE bookstore.book_book_id_seq
+    OWNER TO postgres;
+
+
+CREATE SEQUENCE bookstore.bookxauthor_author_id_seq;
+
+ALTER SEQUENCE bookstore.bookxauthor_author_id_seq
+    OWNER TO postgres;
+
+
+CREATE SEQUENCE bookstore.bookxauthor_book_id_seq;
+
+ALTER SEQUENCE bookstore.bookxauthor_book_id_seq
+    OWNER TO postgres;
+
+	
+
 CREATE TABLE IF NOT EXISTS bookstore.book
 (
     book_id bigint NOT NULL DEFAULT nextval('bookstore.book_book_id_seq'::regclass),
