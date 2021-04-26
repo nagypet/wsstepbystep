@@ -16,7 +16,15 @@
 
 package hu.perit.wsstepbystep.auth;
 
+import org.keycloak.adapters.springboot.KeycloakSpringBootConfigResolver;
+import org.keycloak.adapters.springsecurity.KeycloakConfiguration;
+import org.keycloak.adapters.springsecurity.authentication.KeycloakAuthenticationProvider;
+import org.keycloak.adapters.springsecurity.config.KeycloakWebSecurityConfigurerAdapter;
+import org.keycloak.adapters.springsecurity.filter.KeycloakSecurityContextRequestFilter;
+import org.keycloak.adapters.springsecurity.management.HttpSessionManager;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpMethod;
@@ -24,14 +32,18 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.core.session.SessionRegistryImpl;
+import org.springframework.security.web.authentication.logout.LogoutFilter;
+import org.springframework.security.web.authentication.session.RegisterSessionAuthenticationStrategy;
+import org.springframework.security.web.authentication.session.SessionAuthenticationStrategy;
+import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
+import org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter;
 import org.springframework.security.web.session.SessionManagementFilter;
-import org.springframework.util.StringUtils;
 
-import hu.perit.spvitamin.core.crypto.CryptoUtil;
-import hu.perit.spvitamin.spring.config.SecurityProperties;
-import hu.perit.spvitamin.spring.config.SysConfig;
+import hu.perit.spvitamin.spring.config.SpringContext;
 import hu.perit.spvitamin.spring.rest.api.AuthApi;
+import hu.perit.spvitamin.spring.security.auth.CustomAccessDeniedHandler;
+import hu.perit.spvitamin.spring.security.auth.CustomAuthenticationEntryPoint;
 import hu.perit.spvitamin.spring.security.auth.SimpleHttpSecurityBuilder;
 import hu.perit.wsstepbystep.rest.api.AuthorApi;
 import hu.perit.wsstepbystep.rest.api.BookApi;
@@ -51,9 +63,9 @@ public class WebSecurityConfig
     /*
      * ============== Order(1) =========================================================================================
      */
-    @Configuration
+    @KeycloakConfiguration
     @Order(1)
-    public static class Order1 extends WebSecurityConfigurerAdapter
+    public static class Order1 extends KeycloakWebSecurityConfigurerAdapter
     {
 
         /**
@@ -65,38 +77,68 @@ public class WebSecurityConfig
         @Autowired
         public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception
         {
-            SecurityProperties securityProperties = SysConfig.getSecurityProperties();
-
-            // Admin user
-            PasswordEncoder passwordEncoder = getApplicationContext().getBean(PasswordEncoder.class);
-            if (StringUtils.hasText(securityProperties.getAdminUserName()) && !"disabled".equals(securityProperties.getAdminUserName()))
-            {
-                CryptoUtil crypto = new CryptoUtil();
-                auth.inMemoryAuthentication() //
-                    .withUser(securityProperties.getAdminUserName()) //
-                    .password(passwordEncoder.encode(
-                        crypto.decrypt(SysConfig.getCryptoProperties().getSecret(), securityProperties.getAdminUserEncryptedPassword()))) //
-                    .authorities("ROLE_" + Role.ADMIN.name(), "ROLE_" + Role.PUBLIC.name());
-            }
-            else
-            {
-                log.warn("admin user is disabled!");
-            }
-
-            // A public user
-            auth.inMemoryAuthentication() //
-                .withUser("user") //
-                .password(passwordEncoder.encode("user")) //
-                .authorities("ROLE_" + Role.PUBLIC.name());
+            KeycloakAuthenticationProvider keycloakAuthenticationProvider = keycloakAuthenticationProvider();
+            auth.authenticationProvider(keycloakAuthenticationProvider);
         }
 
 
         @Override
         protected void configure(HttpSecurity http) throws Exception
         {
-            SimpleHttpSecurityBuilder.newInstance(http) //
-                .scope(AuthApi.BASE_URL_AUTHENTICATE + "/**") //
-                .basicAuth();
+            CustomAuthenticationEntryPoint exceptionHandler = SpringContext.getBean(CustomAuthenticationEntryPoint.class);
+            CustomAccessDeniedHandler accessDeniedHandler = SpringContext.getBean(CustomAccessDeniedHandler.class);
+
+            http //
+                .csrf().requireCsrfProtectionMatcher(keycloakCsrfRequestMatcher()) //
+                .and() //
+                .sessionManagement() //
+                .sessionAuthenticationStrategy(sessionAuthenticationStrategy()) //
+                .and() //
+                .addFilterBefore(keycloakPreAuthActionsFilter(), LogoutFilter.class) //
+                .addFilterBefore(keycloakAuthenticationProcessingFilter(), BasicAuthenticationFilter.class) //
+                .addFilterAfter(keycloakSecurityContextRequestFilter(), SecurityContextHolderAwareRequestFilter.class) //
+                .addFilterAfter(keycloakAuthenticatedActionsRequestFilter(), KeycloakSecurityContextRequestFilter.class) //
+                .exceptionHandling().authenticationEntryPoint(exceptionHandler).accessDeniedHandler(accessDeniedHandler) //
+                .and() //
+                .logout() //
+                .addLogoutHandler(keycloakLogoutHandler()) //
+                .logoutUrl("/sso/logout").permitAll() //
+                .logoutSuccessUrl("/");
+
+            //            super.configure(http);
+            http.authorizeRequests() //
+                .antMatchers(AuthApi.BASE_URL_AUTHENTICATE).fullyAuthenticated() //
+                .anyRequest().permitAll();
+
+            //            SimpleHttpSecurityBuilder.newInstance(http) //
+            //                .scope(AuthorApi.BASE_URL_AUTHORS + "/**") //
+            //                .authorizeRequests() //
+            //                //                .antMatchers(AuthApi.BASE_URL_AUTHENTICATE).fullyAuthenticated() //
+            //                .anyRequest().fullyAuthenticated();
+        }
+
+
+        @Override
+        @Bean
+        protected SessionAuthenticationStrategy sessionAuthenticationStrategy()
+        {
+            return new RegisterSessionAuthenticationStrategy(new SessionRegistryImpl());
+        }
+
+
+        @Bean
+        @Override
+        @ConditionalOnMissingBean(HttpSessionManager.class)
+        protected HttpSessionManager httpSessionManager()
+        {
+            return new HttpSessionManager();
+        }
+
+
+        @Bean
+        public KeycloakSpringBootConfigResolver keycloakConfigResolver()
+        {
+            return new KeycloakSpringBootConfigResolver();
         }
     }
 

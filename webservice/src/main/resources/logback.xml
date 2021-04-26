@@ -38,6 +38,8 @@
 	<logger name="org.springframework.boot.context.config" level="DEBUG"/>
 	<logger name="com.thoughtworks.xstream" level="OFF"/>
 	<logger name="org.springframework.transaction.interceptor" level="TRACE"/>
+	<logger name="org.keycloak" level="DEBUG"/>
+	
 	<!-- flooding the log -->
 	<logger name="com.netflix.discovery" level="OFF"/>
 

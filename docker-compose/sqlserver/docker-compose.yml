@@ -28,6 +28,26 @@ services:
             
   
     #####################################################################################                 
+    keycloak:
+    #####################################################################################                 
+        container_name: "keycloak-server"
+        image: "jboss/keycloak:10.0.1"
+        environment:
+          - KEYCLOAK_USER=admin
+          - KEYCLOAK_PASSWORD=password
+          - DB_VENDOR=mssql
+          - DB_ADDR=sqlserver
+          - DB_DATABASE=keycloak
+          - DB_SCHEMA=keycloak
+          - DB_USER=sa
+          - DB_PASSWORD=Passw0rd
+        ports:
+          - "8180:8080"
+        networks: 
+            - back-tier-net
+
+
+    #####################################################################################                 
     webservice:
     #####################################################################################                 
         container_name: webservice

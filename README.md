@@ -9,8 +9,8 @@ What is this project all about? Step by step, I show you how to do a production-
 * step03: Swagger documentation 
 * step04: Exception handling - ControllerAdvice annotation
 * step05: Admin GUI
-* step06: Security 1
-* step07: Security with roles and permissions
+* step06: Security - The basics
+* step07: Security - Roles and permissions
 * step08: Making the /authenticate endpoint
 * step09: Changing the authentication method of the book controller from Basic to Bearer
 * step10: Validation of the REST input parameter
@@ -29,6 +29,7 @@ What is this project all about? Step by step, I show you how to do a production-
 * step23: Installing Prometheus and Grafana
 * step24: Retry on database connection failure
 * step25: Using SQL-Server instead of PostgreSQL
+* step26: Security - Using the Keycloak authentication server
 
 
 
@@ -50,9 +51,9 @@ Please git-clone the spvitamin project in your project root folder.
 
 ## step05: Admin GUI
 
-## step06: Security 1
+## step06: Security - The basics
 
-## step07: Security with roles and permissions
+## step07: Security - Roles and permissions
 
 ## step08: Making the /authenticate endpoint
 * generating a JWT token
@@ -1075,3 +1076,6 @@ How it works? The option DELAYED_ACQUISITION_AND_RELEASE_AFTER_TRANSACTION cause
 * Open SSMS and connect to the db with sa/Passw0rd
 * Run the scripts in db\SQLServer\ in the given sequence, to prepare the database
 * Launch the webservice in the usual way
+
+## step26: Security - Using the Keycloak authentication server
+
