@@ -37,6 +37,7 @@ dependencies {
 	compile project(':spvitamin-spring-server')
 	compile project(':spvitamin-spring-admin')
 	compile project(':spvitamin-spring-security')
+	compile project(':spvitamin-spring-security-keycloak')
 	compile project(':spvitamin-spring-cloud-feign')
 	compile project(':spvitamin-spring-data')
 	compile project(':webservice-api')
