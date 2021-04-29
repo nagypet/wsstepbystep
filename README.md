@@ -1079,3 +1079,5 @@ How it works? The option DELAYED_ACQUISITION_AND_RELEASE_AFTER_TRANSACTION cause
 
 ## step26: Security - Using the Keycloak authentication server
 
+Run c:\np\github\wsstepbystep\docker-compose\sqlserver>coU --svc
+

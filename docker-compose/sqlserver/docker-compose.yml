@@ -30,7 +30,7 @@ services:
     #####################################################################################                 
     keycloak:
     #####################################################################################                 
-        container_name: "keycloak-server"
+        container_name: "keycloak"
         image: "jboss/keycloak:10.0.1"
         environment:
           - KEYCLOAK_USER=admin
@@ -45,6 +45,7 @@ services:
           - "8180:8080"
         networks: 
             - back-tier-net
+        hostname: 'keycloak'
 
 
     #####################################################################################                 

@@ -56,6 +56,7 @@ IF !DB!==1 (
 
 IF !SERVICES!==1 (
 	docker-compose up -d sqlserver
+	docker-compose up -d keycloak
 	docker-compose up -d webservice
 )
 

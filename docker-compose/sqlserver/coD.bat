@@ -45,8 +45,9 @@ IF !SERVICES!==0 (
 )
 
 IF !SERVICES!==1 (
-	docker-compose rm -fsv sqlserver
 	docker-compose rm -fsv webservice
+	docker-compose rm -fsv keycloak
+	docker-compose rm -fsv sqlserver
 )
 
 IF !MONITORING!==1 (
