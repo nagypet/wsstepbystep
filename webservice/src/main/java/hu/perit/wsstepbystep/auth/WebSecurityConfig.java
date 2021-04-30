@@ -68,7 +68,7 @@ public class WebSecurityConfig
         @Override
         protected void configure(HttpSecurity http) throws Exception
         {
-            scope(http, AuthApi.BASE_URL_AUTHENTICATE + "/**");
+            scope(http, AuthApi.BASE_URL_AUTHENTICATE + "/**", "/sso/**");
             configureKeycloak(http);
         }
     }
