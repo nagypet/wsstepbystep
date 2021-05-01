@@ -65,6 +65,22 @@ services:
 
 
     #####################################################################################                 
+    webservice2:
+    #####################################################################################                 
+        container_name: webservice2
+        image: webservice
+        environment:
+              - JAVA_OPTS=
+              - WEBSERVICE_OPTS=-Dspring.profiles.active=dev-docker-sqlserver
+        ports:
+            - "8401:8400"
+        networks: 
+            - back-tier-net
+            - monitoring
+        hostname: 'webservice2'
+
+
+    #####################################################################################                 
     prometheus:
     #####################################################################################                 
         container_name: prometheus

@@ -58,6 +58,7 @@ IF !SERVICES!==1 (
 	docker-compose up -d sqlserver
 	docker-compose up -d keycloak
 	docker-compose up -d webservice
+	docker-compose up -d webservice2
 )
 
 IF !MONITORING!==1 (

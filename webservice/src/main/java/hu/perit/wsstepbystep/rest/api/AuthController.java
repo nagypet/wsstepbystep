@@ -38,7 +38,6 @@ public class AuthController extends AbstractInterfaceLogger implements AuthApi
         {
             AuthorizationToken token = tokenProvider.generateToken(authenticatedUser.getUsername(),
                 new TokenClaims(authenticatedUser.getUserId(), authenticatedUser.getAuthorities()));
-            this.traceOut(processID, authenticatedUser.getUsername(), this.getMyMethodName(), 1);
             return token;
         }
         catch (Throwable ex)
