@@ -1,0 +1,26 @@
+{
+	"/authenticate": {
+		"target": "http://localhost:8400",
+		"secure": false
+	},
+    "/admin": {
+		"target": "http://localhost:8400",
+		"secure": false
+	},
+    "/actuator": {
+		"target": "http://localhost:8400",
+		"secure": false
+	},
+    "/keystore": {
+		"target": "http://localhost:8400",
+		"secure": false
+	},
+    "/truststore": {
+		"target": "http://localhost:8400",
+		"secure": false
+	},
+	"/logout": {
+		"target": "http://localhost:8400",
+		"secure": false
+	}
+}

@@ -41,7 +41,7 @@ export const routes: Routes = [
     CommonModule,
     BrowserModule,
     NgbModule,
-    RouterModule.forRoot(routes),
+    RouterModule.forRoot(routes, { relativeLinkResolution: 'legacy' }),
     HttpClientModule,
     ToastrModule.forRoot(),
     BrowserAnimationsModule,
