@@ -31,7 +31,8 @@ services:
     keycloak:
     #####################################################################################                 
         container_name: "keycloak"
-        image: "jboss/keycloak:10.0.1"
+        #image: "jboss/keycloak:10.0.1"
+        image: wsstepbystep_keycloak
         environment:
           - KEYCLOAK_USER=admin
           - KEYCLOAK_PASSWORD=password
@@ -43,6 +44,7 @@ services:
           - DB_PASSWORD=Passw0rd
         ports:
           - "8180:8080"
+          - "8183:8443"
         networks: 
             - back-tier-net
         hostname: 'keycloak'
