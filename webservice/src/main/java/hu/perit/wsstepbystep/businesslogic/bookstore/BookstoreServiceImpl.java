@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 
 import javax.persistence.LockModeType;
 
+import org.modelmapper.Conditions;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.Lock;
@@ -86,6 +87,7 @@ public class BookstoreServiceImpl implements BookstoreService
     public long createOrUpdateBookEntity(BookEntity bookEntityInput, BookParams bookParams)
     {
         ModelMapper modelMapper = new ModelMapper();
+        modelMapper.getConfiguration().setPropertyCondition(Conditions.isNotNull());
 
         BookEntity bookEntity = null;
         if (bookEntityInput == null)
@@ -117,11 +119,6 @@ public class BookstoreServiceImpl implements BookstoreService
             Set<AuthorEntity> authorEntities = new HashSet<>();
             authorEntities.addAll(existingAuthorEntities);
             authorEntities.addAll(newAuthorEntities);
-
-            if (!newAuthorEntities.isEmpty())
-            {
-                this.authorRepo.saveAll(newAuthorEntities);
-            }
 
             if (!bookEntity.getAuthors().equals(authorEntities))
             {
