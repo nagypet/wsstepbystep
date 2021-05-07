@@ -99,6 +99,8 @@ dependencies {
     }
 
     testImplementation 'org.springframework.security:spring-security-test'
+    
+    compile group: 'org.junit.platform', name: 'junit-platform-commons', version: '1.7.0'
 }
 
 
@@ -112,9 +114,7 @@ dependencyManagement {
 test {
 	useJUnitPlatform()
 }
-integtest {
-    useJUnitPlatform()
-}
+
 
 dockerImage() {
 	dependsOn 'dockerBackendImage'
