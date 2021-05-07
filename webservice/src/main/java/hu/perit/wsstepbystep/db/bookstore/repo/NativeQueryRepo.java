@@ -11,7 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import hu.perit.spvitamin.spring.data.config.DatasourceCollectionProperties;
 import hu.perit.spvitamin.spring.data.config.DatasourceProperties;
 import hu.perit.spvitamin.spring.data.nativequery.NativeQueryRepoImpl;
-import hu.perit.wsstepbystep.db.bookstore.PostgresDbConfig;
+import hu.perit.wsstepbystep.db.bookstore.BookstoreDbConfig;
 
 @Repository
 public class NativeQueryRepo
@@ -20,7 +20,7 @@ public class NativeQueryRepo
 
     public NativeQueryRepo(EntityManager em, DatasourceCollectionProperties dbProperties)
     {
-        DatasourceProperties datasourceProperties = dbProperties.getDatasource().get(PostgresDbConfig.PERSISTENCE_UNIT);
+        DatasourceProperties datasourceProperties = dbProperties.getDatasource().get(BookstoreDbConfig.PERSISTENCE_UNIT);
         this.impl = new NativeQueryRepoImpl(em, datasourceProperties.getSocketTimeout());
     }
 
