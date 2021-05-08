@@ -60,7 +60,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "wsstepbystep_health{instance=\"webservice:8400\"}",
+          "expr": "wsstepbystep_health{instance=\"webservice.wsstepbystep.perit.hu:8400\"}",
           "interval": "",
           "legendFormat": "",
           "refId": "A"
@@ -150,7 +150,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "wsstepbystep_bookcount_pcs{instance=\"webservice:8400\"}",
+          "expr": "wsstepbystep_bookcount_pcs{instance=\"webservice.wsstepbystep.perit.hu:8400\"}",
           "interval": "",
           "legendFormat": "",
           "refId": "A"
@@ -218,5 +218,5 @@
   "variables": {
     "list": []
   },
-  "version": 3
+  "version": 2
 }

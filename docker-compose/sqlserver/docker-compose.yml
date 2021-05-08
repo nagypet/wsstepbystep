@@ -114,10 +114,10 @@ services:
         networks: 
             monitoring:
                 aliases:
-                    - monitoring.wsstepbystep.perit.hu
+                    - prometheus.wsstepbystep.perit.hu
         labels:
             hu.perit.template.cluster: "monitoring"
-        hostname: 'monitoring.wsstepbystep.perit.hu'
+        hostname: prometheus.wsstepbystep.perit.hu
 
 
     #####################################################################################                 
@@ -140,8 +140,8 @@ services:
         networks: 
             monitoring:
                 aliases:
-                    - monitoring.wsstepbystep.perit.hu
-        hostname: 'monitoring.wsstepbystep.perit.hu'
+                    - nodeexporter.wsstepbystep.perit.hu
+        hostname: nodeexporter.wsstepbystep.perit.hu
         labels:
             hu.perit.template.cluster: "monitoring"
 
@@ -163,8 +163,8 @@ services:
         networks: 
             monitoring:
                 aliases:
-                    - monitoring.wsstepbystep.perit.hu
-        hostname: 'monitoring.wsstepbystep.perit.hu'
+                    - cadvisor.wsstepbystep.perit.hu
+        hostname: cadvisor.wsstepbystep.perit.hu
         labels:
             hu.perit.template.cluster: "monitoring"
 
@@ -181,8 +181,8 @@ services:
         networks: 
             monitoring:
                 aliases:
-                    - monitoring.wsstepbystep.perit.hu
-        hostname: 'monitoring.wsstepbystep.perit.hu'
+                    - grafana.wsstepbystep.perit.hu
+        hostname: grafana.wsstepbystep.perit.hu
         depends_on:
             - prometheus
         labels:
