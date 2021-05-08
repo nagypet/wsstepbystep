@@ -24,7 +24,10 @@ services:
         volumes:
             - wsstepbystep_sqlserver:/var/opt/mssql
         networks: 
-            - back-tier-net
+            back-tier-net:
+                aliases:
+                    - sqlserver.wsstepbystep.perit.hu
+        hostname: sqlserver.wsstepbystep.perit.hu
             
   
     #####################################################################################                 
@@ -37,7 +40,7 @@ services:
           - KEYCLOAK_USER=admin
           - KEYCLOAK_PASSWORD=password
           - DB_VENDOR=mssql
-          - DB_ADDR=sqlserver
+          - DB_ADDR=sqlserver.wsstepbystep.perit.hu
           - DB_DATABASE=keycloak
           - DB_SCHEMA=keycloak
           - DB_USER=sa
@@ -46,8 +49,10 @@ services:
           - "8180:8080"
           - "8183:8443"
         networks: 
-            - back-tier-net
-        hostname: 'keycloak'
+            back-tier-net:
+                aliases:
+                    - keycloak.wsstepbystep.perit.hu
+        hostname: keycloak.wsstepbystep.perit.hu
 
 
     #####################################################################################                 
@@ -57,13 +62,17 @@ services:
         image: webservice
         environment:
               - JAVA_OPTS=
-              - WEBSERVICE_OPTS=-Dspring.profiles.active=dev-docker-sqlserver
+              - WEBSERVICE_OPTS=-Dspring.profiles.active=dev-docker,dev-docker-sqlserver
         ports:
             - "8400:8400"
         networks: 
-            - back-tier-net
-            - monitoring
-        hostname: 'webservice'
+            back-tier-net:
+                aliases:
+                    - webservice.wsstepbystep.perit.hu
+            monitoring:
+                aliases:
+                    - webservice.wsstepbystep.perit.hu
+        hostname: 'webservice.wsstepbystep.perit.hu'
 
 
     #####################################################################################                 
@@ -73,13 +82,17 @@ services:
         image: webservice
         environment:
               - JAVA_OPTS=
-              - WEBSERVICE_OPTS=-Dspring.profiles.active=dev-docker-sqlserver
+              - WEBSERVICE_OPTS=-Dspring.profiles.active=dev-docker,dev-docker-sqlserver
         ports:
             - "8401:8400"
         networks: 
-            - back-tier-net
-            - monitoring
-        hostname: 'webservice2'
+            back-tier-net:
+                aliases:
+                    - webservice2.wsstepbystep.perit.hu
+            monitoring:
+                aliases:
+                    - webservice2.wsstepbystep.perit.hu
+        hostname: 'webservice2.wsstepbystep.perit.hu'
 
 
     #####################################################################################                 
@@ -99,9 +112,12 @@ services:
         ports:
             - '9090:9090'
         networks: 
-            - monitoring
+            monitoring:
+                aliases:
+                    - monitoring.wsstepbystep.perit.hu
         labels:
             hu.perit.template.cluster: "monitoring"
+        hostname: 'monitoring.wsstepbystep.perit.hu'
 
 
     #####################################################################################                 
@@ -122,7 +138,10 @@ services:
         ports:
             - '9100:9100'
         networks: 
-            - monitoring
+            monitoring:
+                aliases:
+                    - monitoring.wsstepbystep.perit.hu
+        hostname: 'monitoring.wsstepbystep.perit.hu'
         labels:
             hu.perit.template.cluster: "monitoring"
 
@@ -142,7 +161,10 @@ services:
         ports:
             - '8080:8080'
         networks: 
-            - monitoring
+            monitoring:
+                aliases:
+                    - monitoring.wsstepbystep.perit.hu
+        hostname: 'monitoring.wsstepbystep.perit.hu'
         labels:
             hu.perit.template.cluster: "monitoring"
 
@@ -157,7 +179,10 @@ services:
         ports:
             - '3000:3000'
         networks: 
-            - monitoring
+            monitoring:
+                aliases:
+                    - monitoring.wsstepbystep.perit.hu
+        hostname: 'monitoring.wsstepbystep.perit.hu'
         depends_on:
             - prometheus
         labels:
@@ -166,7 +191,5 @@ services:
   
 volumes:
     wsstepbystep_sqlserver:
-    wsstepbystep_postgres:
-    wsstepbystep_pgadmin:
     wsstepbystep_prometheus:
     wsstepbystep_grafana:
