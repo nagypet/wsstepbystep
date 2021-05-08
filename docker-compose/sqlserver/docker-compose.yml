@@ -45,9 +45,10 @@ services:
           - DB_SCHEMA=keycloak
           - DB_USER=sa
           - DB_PASSWORD=Passw0rd
+        command: ["-Djboss.socket.binding.port-offset=100"]  
         ports:
-          - "8180:8080"
-          - "8183:8443"
+          - "8180:8180"
+          - "8543:8543"
         networks: 
             back-tier-net:
                 aliases:
@@ -62,7 +63,7 @@ services:
         image: webservice
         environment:
               - JAVA_OPTS=
-              - WEBSERVICE_OPTS=-Dspring.profiles.active=dev-docker,dev-docker-sqlserver
+              - WEBSERVICE_OPTS=-Dspring.profiles.active=dev-docker,dev-docker-sqlserver -Dserver.fqdn=webservice.wsstepbystep.perit.hu -Dserver.port=8400 
         ports:
             - "8400:8400"
         networks: 
@@ -82,9 +83,9 @@ services:
         image: webservice
         environment:
               - JAVA_OPTS=
-              - WEBSERVICE_OPTS=-Dspring.profiles.active=dev-docker,dev-docker-sqlserver
+              - WEBSERVICE_OPTS=-Dspring.profiles.active=dev-docker,dev-docker-sqlserver -Dserver.fqdn=webservice2.wsstepbystep.perit.hu -Dserver.port=8401 
         ports:
-            - "8401:8400"
+            - "8401:8401"
         networks: 
             back-tier-net:
                 aliases:
