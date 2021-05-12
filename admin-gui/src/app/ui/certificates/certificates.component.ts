@@ -43,7 +43,7 @@ export class CertificatesComponent implements OnInit {
 
   ngOnInit() {
     if (this.authService.isAuthenticated()) {
-      if (this.keystoreType === 'keystore' || this.router.url === '/tab-keystore') {
+      if (this.keystoreType === 'keystore' || this.router.url === '/admin-gui/keystore') {
         this.keystoreType = 'keystore';
         this.loadKeystoreEntries();
       }

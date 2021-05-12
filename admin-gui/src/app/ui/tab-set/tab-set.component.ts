@@ -8,9 +8,9 @@ import { Component, OnInit } from '@angular/core';
 export class TabSetComponent implements OnInit {
 
   tabs: Array<{ route: string, title: string }> = [
-    {route: 'tab-settings', title: 'Settings'},
-    {route: 'tab-keystore', title: 'Keystore'},
-    {route: 'tab-truststore', title: 'Truststore'}
+    {route: 'settings', title: 'Settings'},
+    {route: 'keystore', title: 'Keystore'},
+    {route: 'truststore', title: 'Truststore'}
   ];
 
   constructor() { }

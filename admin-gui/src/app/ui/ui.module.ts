@@ -5,7 +5,7 @@
  */
 
 import {NgModule} from '@angular/core';
-import {CommonModule} from '@angular/common';
+import {CommonModule, HashLocationStrategy, LocationStrategy} from '@angular/common';
 import {LayoutComponent} from './layout/layout.component';
 import {HeaderComponent} from './header/header.component';
 import {FooterComponent} from './footer/footer.component';
@@ -24,23 +24,22 @@ import {KeystoreComponent, NgbdModalContent} from './certificates/keystore/keyst
 import {AboutComponent} from './about/about.component';
 import {TabSetComponent} from './tab-set/tab-set.component';
 import {AuthGuard} from './auth.guard';
-import {AppAuthGuard} from './app.authguard';
 import {AuthService} from './auth.service';
 import {KeycloakService} from 'keycloak-angular';
 
 
 export const routes: Routes = [
-  {path: '', redirectTo: '/tab-settings', pathMatch: 'full'},
+  {path: '', redirectTo: 'admin-gui/settings', pathMatch: 'full'},
   {
-    path: '', component: TabSetComponent,
+    path: 'admin-gui', component: TabSetComponent,
     children: [
-      {path: 'tab-settings', component: SettingsComponent},
-      {path: 'tab-keystore', component: CertificatesComponent, canActivate: [AppAuthGuard]},
-      {path: 'tab-truststore', component: CertificatesComponent, canActivate: [AuthGuard]},
+      {path: 'settings', component: SettingsComponent},
+      {path: 'keystore', component: CertificatesComponent, canActivate: [AuthGuard]},
+      {path: 'truststore', component: CertificatesComponent, canActivate: [AuthGuard]},
     ],
   },
-  {path: 'login', component: LoginComponent},
-  {path: 'about', component: AboutComponent},
+  {path: 'admin-gui/login', component: LoginComponent},
+  {path: 'admin-gui/about', component: AboutComponent},
 ];
 
 @NgModule({
@@ -68,7 +67,8 @@ export const routes: Routes = [
     AdminService,
     AuthService,
     KeycloakService,
-    {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true}
+    {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true},
+    {provide: LocationStrategy, useClass: HashLocationStrategy}
   ],
   exports: [LayoutComponent],
   entryComponents: [NgbdModalContent]

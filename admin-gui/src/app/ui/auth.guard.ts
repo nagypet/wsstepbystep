@@ -40,6 +40,6 @@ export class AuthGuard implements CanActivate, CanActivateChild {
       return true;
     }
 
-    return this.router.createUrlTree(['/login']);
+    return this.router.createUrlTree(['/admin-gui/login']);
   }
 }
