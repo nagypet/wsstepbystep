@@ -6,7 +6,7 @@
 
 import {Component, OnInit} from '@angular/core';
 import {AdminService} from '../admin.service';
-import {GlobalService} from '../global.service';
+import {AuthService} from '../auth.service';
 
 export class ServerParameter {
   name: string;
@@ -31,33 +31,20 @@ export class SettingsComponent implements OnInit {
 
   constructor(
     public adminService: AdminService,
-    public globalService: GlobalService
+    public authService: AuthService
   ) {
 
   }
 
   ngOnInit() {
-    this.adminService.getSettingsSilently().subscribe(data => {
-      console.log('Authentication is not required, settings can be displayed!');
-      this.globalService.setSettingsAvailable(true);
+    this.adminService.getSettings().subscribe(data => {
       this.settings = data;
-    }, error => {
-      console.log(error.status + ' authentication is required, no settings can be displayed!');
-      this.globalService.setSettingsAvailable(false);
     });
-
-    this.adminService.getAuthenticationToken().subscribe(data => {
-      console.log('Session already authenticated!');
-      this.globalService.login(data.sub, data.jwt);
-    }, error => {
-      console.log('Session is not authenticated!');
-    });
-
   }
+
 
   onShutdown() {
     this.adminService.postShutdown().subscribe(data => {
-      console.log(data);
       this.shutdownIsInProgress = true;
     });
   }

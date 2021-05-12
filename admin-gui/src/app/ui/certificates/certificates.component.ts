@@ -6,7 +6,7 @@
 
 import {Component, ElementRef, Input, OnInit, ViewChild} from '@angular/core';
 import {AdminService} from '../admin.service';
-import {GlobalService} from '../global.service';
+import {AuthService} from '../auth.service';
 import {CertificateFile, KeystoreEntry} from '../../modell/keystore';
 import {Router} from '@angular/router';
 
@@ -33,7 +33,7 @@ export class CertificatesComponent implements OnInit {
 
   constructor(
     public adminService: AdminService,
-    public globalService: GlobalService,
+    public authService: AuthService,
     private router: Router,
   ) {
     this.certFile = null;
@@ -42,7 +42,7 @@ export class CertificatesComponent implements OnInit {
   }
 
   ngOnInit() {
-    if (this.globalService.isLoggedIn()) {
+    if (this.authService.isAuthenticated()) {
       if (this.keystoreType === 'keystore' || this.router.url === '/tab-keystore') {
         this.keystoreType = 'keystore';
         this.loadKeystoreEntries();

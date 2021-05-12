@@ -23,6 +23,7 @@ import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {KeystoreComponent, NgbdModalContent} from './certificates/keystore/keystore.component';
 import {AboutComponent} from './about/about.component';
 import {TabSetComponent} from './tab-set/tab-set.component';
+import {AuthGuard} from './auth.guard';
 
 
 export const routes: Routes = [
@@ -30,12 +31,9 @@ export const routes: Routes = [
   {
     path: '', component: TabSetComponent,
     children: [
-      //{path: 'tevekenysegek', component: TevekenysegekComponent, canActivate: [AuthGuard]},
-      //{path: 'bizonylatok', component: BizonylatokComponent, canActivate: [AuthGuard]},
-      //{path: 'kilevelezes', component: KilevelezesComponent, canActivate: [AuthGuard]},
       {path: 'tab-settings', component: SettingsComponent},
-      {path: 'tab-keystore', component: CertificatesComponent},
-      {path: 'tab-truststore', component: CertificatesComponent},
+      {path: 'tab-keystore', component: CertificatesComponent, canActivate: [AuthGuard]},
+      {path: 'tab-truststore', component: CertificatesComponent, canActivate: [AuthGuard]},
     ],
   },
   {path: 'login', component: LoginComponent},
