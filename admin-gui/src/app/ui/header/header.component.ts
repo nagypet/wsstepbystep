@@ -32,8 +32,8 @@ export class HeaderComponent implements OnInit {
       this.version = data.Version;
     });
 
-    this.authService.tryGetSettings().subscribe();
     this.authService.getAuthentication().subscribe();
+    this.authService.tryGetSettings().subscribe();
   }
 
   onLogout() {

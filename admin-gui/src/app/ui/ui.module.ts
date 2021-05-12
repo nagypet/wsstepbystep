@@ -24,6 +24,9 @@ import {KeystoreComponent, NgbdModalContent} from './certificates/keystore/keyst
 import {AboutComponent} from './about/about.component';
 import {TabSetComponent} from './tab-set/tab-set.component';
 import {AuthGuard} from './auth.guard';
+import {AppAuthGuard} from './app.authguard';
+import {AuthService} from './auth.service';
+import {KeycloakService} from 'keycloak-angular';
 
 
 export const routes: Routes = [
@@ -32,7 +35,7 @@ export const routes: Routes = [
     path: '', component: TabSetComponent,
     children: [
       {path: 'tab-settings', component: SettingsComponent},
-      {path: 'tab-keystore', component: CertificatesComponent, canActivate: [AuthGuard]},
+      {path: 'tab-keystore', component: CertificatesComponent, canActivate: [AppAuthGuard]},
       {path: 'tab-truststore', component: CertificatesComponent, canActivate: [AuthGuard]},
     ],
   },
@@ -63,6 +66,8 @@ export const routes: Routes = [
   ],
   providers: [
     AdminService,
+    AuthService,
+    KeycloakService,
     {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true}
   ],
   exports: [LayoutComponent],

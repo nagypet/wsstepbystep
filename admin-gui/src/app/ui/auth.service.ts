@@ -72,12 +72,13 @@ export class AuthService {
   public getAuthentication(): Observable<any> {
     return this.httpSilent.get(AdminService.getServiceUrl('/authenticate')).pipe(
       tap(response => {
-        console.log('getAuthentication(): Session already authenticated!');
+        console.log('getAuthentication(): Session already authent servicated!');
         this.authenticated = true;
         this.userName = response.sub;
         this.token = response.jwt;
       }, err => {
         console.log('getAuthentication() error: ' + err.status + ' Session is not authenticated!');
+        console.log(err);
         this.authenticated = false;
         this.userName = '';
         this.token = '';
