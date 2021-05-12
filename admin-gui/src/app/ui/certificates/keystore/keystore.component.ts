@@ -38,7 +38,7 @@ export class NgbdModalContent
 @Component({
   selector: 'app-keystore',
   templateUrl: './keystore.component.html',
-  styleUrls: ['./keystore.component.css']
+  styleUrls: ['./keystore.component.scss']
 })
 export class KeystoreComponent implements OnInit, OnChanges
 {

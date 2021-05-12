@@ -23,7 +23,7 @@ export class ServerParameter {
 @Component({
   selector: 'app-settings',
   templateUrl: './settings.component.html',
-  styleUrls: ['./settings.component.css']
+  styleUrls: ['./settings.component.scss']
 })
 export class SettingsComponent implements OnInit {
   public settings: Array<ServerParameter> = new Array<ServerParameter>();
