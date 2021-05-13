@@ -2,19 +2,24 @@
     "clientId": "spring-boot-legacy",
     "rootUrl": "",
     "adminUrl": "",
-    "baseUrl": "https://localhost:8400",
+    "baseUrl": "",
     "surrogateAuthRequired": false,
     "enabled": true,
     "alwaysDisplayInConsole": false,
     "clientAuthenticatorType": "client-secret",
     "redirectUris": [
-        "https://localhost:8400/*"
+        "https://localhost:4200/sso/login",
+        "https://localhost:8400/sso/login",
+        "https://webservice.wsstepbystep.perit.hu:8400/sso/login",
+        "https://webservice2.wsstepbystep.perit.hu:8401/sso/login"
     ],
-    "webOrigins": [],
+    "webOrigins": [
+        "*"
+    ],
     "notBefore": 0,
     "bearerOnly": false,
     "consentRequired": false,
-    "standardFlowEnabled": false,
+    "standardFlowEnabled": true,
     "implicitFlowEnabled": false,
     "directAccessGrantsEnabled": true,
     "serviceAccountsEnabled": false,
