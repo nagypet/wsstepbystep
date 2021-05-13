@@ -52,9 +52,27 @@ export class AuthService {
 
 
   public authenticateWithUserNamePassword(userName: string, password: string): Observable<any> {
-    return this.http.get(AdminService.getServiceUrl('/authenticate'), this.getAuthHeader(userName, password)).pipe(
+    return this.http.get(AdminService.getServiceUrl('/authenticate'), this.getAuthHeaderForLegacyAuthentication(userName, password)).pipe(
       tap(response => {
         console.log('authenticateWithUserNamePassword()');
+        console.log(response);
+        this.authenticated = true;
+        this.userName = response.sub;
+        this.token = response.jwt;
+      }, err => {
+        console.log(err);
+        this.authenticated = false;
+        this.userName = '';
+        this.token = '';
+      })
+    );
+  }
+
+
+  public authenticateWithKeycloakToken(token: string): Observable<any> {
+    return this.http.get(AdminService.getServiceUrl('/authenticate'), this.getAuthHeaderForToken(token)).pipe(
+      tap(response => {
+        console.log('authenticateWithKeycloakToken()');
         console.log(response);
         this.authenticated = true;
         this.userName = response.sub;
@@ -72,7 +90,7 @@ export class AuthService {
   public getAuthentication(): Observable<any> {
     return this.httpSilent.get(AdminService.getServiceUrl('/authenticate')).pipe(
       tap(response => {
-        console.log('getAuthentication(): Session already authent servicated!');
+        console.log('getAuthentication(): Session already authenticated!');
         this.authenticated = true;
         this.userName = response.sub;
         this.token = response.jwt;
@@ -116,7 +134,7 @@ export class AuthService {
   }
 
 
-  private getAuthHeader(userName?, password?): { headers: HttpHeaders } {
+  private getAuthHeaderForLegacyAuthentication(userName?: String, password?: String): { headers: HttpHeaders } {
     let authorizationHeader = '';
     if (userName !== undefined && password !== undefined) {
       const credentials = userName + ':' + password;
@@ -127,6 +145,18 @@ export class AuthService {
     }
 
     // console.log(credentials);
+
+    return {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        'Authorization': authorizationHeader
+      })
+    };
+  }
+
+
+  private getAuthHeaderForToken(token: String): { headers: HttpHeaders } {
+    const authorizationHeader = 'Bearer ' + token;
 
     return {
       headers: new HttpHeaders({

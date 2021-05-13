@@ -4,7 +4,7 @@
  * Author Peter Nagy <nagy.peter.home@gmail.com>
  */
 
-import {NgModule} from '@angular/core';
+import {APP_INITIALIZER, NgModule} from '@angular/core';
 import {CommonModule, HashLocationStrategy, LocationStrategy} from '@angular/common';
 import {LayoutComponent} from './layout/layout.component';
 import {HeaderComponent} from './header/header.component';
@@ -25,16 +25,19 @@ import {AboutComponent} from './about/about.component';
 import {TabSetComponent} from './tab-set/tab-set.component';
 import {AuthGuard} from './auth.guard';
 import {AuthService} from './auth.service';
-import {KeycloakService} from 'keycloak-angular';
+import {KeycloakAngularModule, KeycloakService} from 'keycloak-angular';
+import {AppAuthGuard} from './app.authguard';
+import {initializeKeycloak} from './auth/init/keycloak-init.factory';
 
 
 export const routes: Routes = [
   {path: '', redirectTo: 'admin-gui/settings', pathMatch: 'full'},
+  {path: 'admin-gui', redirectTo: 'admin-gui/settings', pathMatch: 'full'},
   {
     path: 'admin-gui', component: TabSetComponent,
     children: [
       {path: 'settings', component: SettingsComponent},
-      {path: 'keystore', component: CertificatesComponent, canActivate: [AuthGuard]},
+      {path: 'keystore', component: CertificatesComponent, canActivate: [AppAuthGuard]},
       {path: 'truststore', component: CertificatesComponent, canActivate: [AuthGuard]},
     ],
   },
@@ -62,13 +65,22 @@ export const routes: Routes = [
     HttpClientModule,
     ToastrModule.forRoot(),
     BrowserAnimationsModule,
+    KeycloakAngularModule,
   ],
   providers: [
     AdminService,
     AuthService,
     KeycloakService,
+    AuthGuard,
+    AppAuthGuard,
     {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true},
-    {provide: LocationStrategy, useClass: HashLocationStrategy}
+    {provide: LocationStrategy, useClass: HashLocationStrategy},
+    {
+      provide: APP_INITIALIZER,
+      useFactory: initializeKeycloak,
+      multi: true,
+      deps: [KeycloakService],
+    }
   ],
   exports: [LayoutComponent],
   entryComponents: [NgbdModalContent]

@@ -2,8 +2,8 @@
 
 set SOURCE=dist\admingui
 set DEST1=..\webservice
-set DEST2=
-set DEST3=
+set DEST2=notused
+set DEST3=notused
 set SITEPATH=\src\main\resources\public
 
 call ng build --prod --configuration=production
