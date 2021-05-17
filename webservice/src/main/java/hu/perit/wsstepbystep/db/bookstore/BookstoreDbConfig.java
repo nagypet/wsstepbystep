@@ -51,12 +51,12 @@ import lombok.extern.slf4j.Slf4j;
 
 @Configuration
 @EnableTransactionManagement
-@EnableJpaRepositories(basePackages = PostgresDbConfig.PACKAGES, //
-    entityManagerFactoryRef = PostgresDbConfig.ENTITY_MANAGER_FACTORY, //
-    transactionManagerRef = PostgresDbConfig.TRANSACTION_MANAGER)
+@EnableJpaRepositories(basePackages = BookstoreDbConfig.PACKAGES, //
+    entityManagerFactoryRef = BookstoreDbConfig.ENTITY_MANAGER_FACTORY, //
+    transactionManagerRef = BookstoreDbConfig.TRANSACTION_MANAGER)
 @EnableJpaAuditing(auditorAwareRef = "auditorProvider")
 @Slf4j
-public class PostgresDbConfig
+public class BookstoreDbConfig
 {
     static final String PACKAGES = "hu.perit.wsstepbystep.db.bookstore";
     static final String ENTITY_MANAGER_FACTORY = "entityManagerFactory";
@@ -67,7 +67,7 @@ public class PostgresDbConfig
 
     private final ConnectionParam connectionParam;
 
-    public PostgresDbConfig(DatasourceCollectionProperties dbProperties)
+    public BookstoreDbConfig(DatasourceCollectionProperties dbProperties)
     {
         this.connectionParam = new ConnectionParam(dbProperties.getDatasource().get(PERSISTENCE_UNIT));
     }
