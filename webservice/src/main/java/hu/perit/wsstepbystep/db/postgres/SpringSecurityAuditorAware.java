@@ -21,7 +21,7 @@ import java.util.Optional;
 import org.springframework.data.domain.AuditorAware;
 
 import hu.perit.spvitamin.spring.config.SpringContext;
-import hu.perit.spvitamin.spring.security.auth.AuthorizationService;
+import hu.perit.spvitamin.spring.security.auth.SpvitaminAuthorizationService;
 
 /**
  * #know-how:jpa-auditing
@@ -35,6 +35,6 @@ class SpringSecurityAuditorAware implements AuditorAware<String>
     @Override
     public Optional<String> getCurrentAuditor()
     {
-        return Optional.of(SpringContext.getBean(AuthorizationService.class).getAuthenticatedUser().getUsername());
+        return Optional.of(SpringContext.getBean(SpvitaminAuthorizationService.class).getAuthenticatedUser().getUsername());
     }
 }
