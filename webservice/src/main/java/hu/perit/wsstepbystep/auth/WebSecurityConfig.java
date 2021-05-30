@@ -96,7 +96,7 @@ public class WebSecurityConfig
         {
             SimpleHttpSecurityBuilder.newInstance(http) //
                 .scope(AuthApi.BASE_URL_AUTHENTICATE + "/**") //
-                .basicAuth();
+                .basicAuthWithSession();
         }
     }
 

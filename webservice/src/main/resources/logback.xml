@@ -63,6 +63,9 @@
 	<logger name="hu.perit.spvitamin.spring.security.ldap" level="DEBUG" additivity="false">
 		<appender-ref ref="application-message"/>
 	</logger>
+	<logger name="hu.perit.spvitamin.spring.config" level="DEBUG" additivity="false">
+		<appender-ref ref="application-message"/>
+	</logger>
 	
 	<!--
 	<logger name="com.netflix.discovery" level="OFF"/>
