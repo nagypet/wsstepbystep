@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import hu.perit.spvitamin.core.took.Took;
 import hu.perit.spvitamin.spring.logging.AbstractInterfaceLogger;
-import hu.perit.spvitamin.spring.security.auth.SpvitaminAuthorizationService;
+import hu.perit.spvitamin.spring.security.auth.AuthorizationService;
 import hu.perit.webservice.rest.model.AuthorWithBooksDTO;
 import hu.perit.wsstepbystep.businesslogic.api.BookstoreService;
 import hu.perit.wsstepbystep.config.Constants;
@@ -18,11 +18,10 @@ import hu.perit.wsstepbystep.config.Constants;
 public class AuthorController extends AbstractInterfaceLogger implements AuthorApi
 {
 
-    private final SpvitaminAuthorizationService authorizationService;
+    private final AuthorizationService authorizationService;
     private final BookstoreService bookstoreService;
 
-    protected AuthorController(HttpServletRequest httpRequest, SpvitaminAuthorizationService authorizationService,
-        BookstoreService bookstoreService)
+    protected AuthorController(HttpServletRequest httpRequest, AuthorizationService authorizationService, BookstoreService bookstoreService)
     {
         super(httpRequest);
         this.authorizationService = authorizationService;
