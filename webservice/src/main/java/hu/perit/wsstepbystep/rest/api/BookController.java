@@ -3,7 +3,7 @@ package hu.perit.wsstepbystep.rest.api;
 import hu.perit.spvitamin.core.took.Took;
 import hu.perit.spvitamin.spring.exception.ResourceNotFoundException;
 import hu.perit.spvitamin.spring.logging.AbstractInterfaceLogger;
-import hu.perit.spvitamin.spring.security.auth.AuthorizationService;
+import hu.perit.spvitamin.spring.security.auth.SpvitaminAuthorizationService;
 import hu.perit.webservice.rest.model.BookDTO;
 import hu.perit.webservice.rest.model.BookParams;
 import hu.perit.webservice.rest.model.ResponseUri;
