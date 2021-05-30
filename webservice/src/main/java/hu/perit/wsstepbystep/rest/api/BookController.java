@@ -12,7 +12,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import hu.perit.spvitamin.core.took.Took;
 import hu.perit.spvitamin.spring.exception.ResourceNotFoundException;
 import hu.perit.spvitamin.spring.logging.AbstractInterfaceLogger;
-import hu.perit.spvitamin.spring.security.auth.SpvitaminAuthorizationService;
+import hu.perit.spvitamin.spring.security.auth.AuthorizationService;
 import hu.perit.webservice.rest.model.BookDTO;
 import hu.perit.webservice.rest.model.BookParams;
 import hu.perit.webservice.rest.model.ResponseUri;
@@ -23,11 +23,10 @@ import hu.perit.wsstepbystep.config.Constants;
 public class BookController extends AbstractInterfaceLogger implements BookApi
 {
 
-    private final SpvitaminAuthorizationService authorizationService;
+    private final AuthorizationService authorizationService;
     private final BookstoreService bookstoreService;
 
-    protected BookController(HttpServletRequest httpRequest, SpvitaminAuthorizationService authorizationService,
-        BookstoreService bookstoreService)
+    protected BookController(HttpServletRequest httpRequest, AuthorizationService authorizationService, BookstoreService bookstoreService)
     {
         super(httpRequest);
         this.authorizationService = authorizationService;
