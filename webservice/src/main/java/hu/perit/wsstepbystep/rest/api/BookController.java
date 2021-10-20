@@ -49,8 +49,7 @@ public class BookController implements BookApi
     // getBookById
     //------------------------------------------------------------------------------------------------------------------
     @Override
-    public BookDTO getBookById(Long id) throws ResourceNotFoundException
-    {
+    public BookDTO getBookById(Long id) throws ResourceNotFoundException {
         log.debug("getBookById()");
         
         if (LongUtils.equals(id, 120L))
