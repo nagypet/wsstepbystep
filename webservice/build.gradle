@@ -9,11 +9,19 @@ apply from: '../gradle/common.gradle'
 
 repositories {
     jcenter()
-    mavenCentral()
+	mavenCentral()
+    maven {
+        url "http://perit.hu/maven"
+    }
     flatDir {
         dirs '../gradle/localrepo'
     }
 }
+
+ext {
+    set('spvitaminVersion', '1.3.3-RELEASE')
+}
+
 
 application {
     mainClassName = 'hu.perit.wsstepbystep.WsstepbystepApplication'
@@ -25,11 +33,11 @@ application {
 sourceCompatibility = 11
 
 dependencies {
-	compile project(':spvitamin-core')		
-	compile project(':spvitamin-spring-server')
-	compile project(':spvitamin-spring-admin')
-	compile project(':spvitamin-spring-security')
-		
+    implementation 'hu.perit.spvitamin:spvitamin-core'
+    implementation 'hu.perit.spvitamin:spvitamin-spring-server'
+    implementation 'hu.perit.spvitamin:spvitamin-spring-admin'
+    implementation 'hu.perit.spvitamin:spvitamin-spring-security'
+
     // Lombok
     compileOnly 'org.projectlombok:lombok'
     testCompileOnly 'org.projectlombok:lombok'
@@ -40,7 +48,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
-    
+
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
     // Swagger
@@ -56,13 +64,21 @@ dependencies {
 	// FasterXML
     implementation 'com.fasterxml.jackson.core:jackson-core'
     implementation 'com.fasterxml.jackson.core:jackson-databind'
-    
+
     // YAML formatting
     implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml'
 
     // Slf4J
 	implementation group: 'org.slf4j', name: 'slf4j-api', version: '1.7.30'
 }
+
+
+dependencyManagement {
+    imports {
+        mavenBom "hu.perit.spvitamin:spvitamin-dependencies:${spvitaminVersion}"
+    }
+}
+
 
 test {
 	useJUnitPlatform()
