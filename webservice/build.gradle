@@ -8,7 +8,15 @@ apply from: '../gradle/common.gradle'
 
 repositories {
 	mavenCentral()
+    maven {
+        url "http://perit.hu/maven"
+    }
 }
+
+ext {
+    set('spvitaminVersion', '1.3.2-RELEASE')
+}
+
 
 application {
     mainClassName = 'hu.perit.wsstepbystep.WsstepbystepApplication'
@@ -20,7 +28,7 @@ application {
 sourceCompatibility = 11
 
 dependencies {
-	compile project(':spvitamin-core')
+    implementation 'hu.perit.spvitamin:spvitamin-core'
 	
     // Lombok
     compileOnly 'org.projectlombok:lombok'
@@ -43,6 +51,14 @@ dependencies {
     // Slf4J
 	implementation group: 'org.slf4j', name: 'slf4j-api', version: '1.7.30'
 }
+
+
+dependencyManagement {
+    imports {
+        mavenBom "hu.perit.spvitamin:spvitamin-dependencies:${spvitaminVersion}"
+    }
+}
+
 
 test {
 	useJUnitPlatform()
