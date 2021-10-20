@@ -34,6 +34,7 @@ sourceCompatibility = 11
 
 dependencies {
     implementation 'hu.perit.spvitamin:spvitamin-core'
+    implementation 'hu.perit.spvitamin:spvitamin-spring-general'
     implementation 'hu.perit.spvitamin:spvitamin-spring-server'
 
     // Lombok

@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
+import hu.perit.spvitamin.spring.exception.ResourceNotFoundException;
 import hu.perit.wsstepbystep.rest.model.BookDTO;
 import hu.perit.wsstepbystep.rest.model.BookParams;
 import hu.perit.wsstepbystep.rest.model.ResponseUri;
@@ -48,7 +49,7 @@ public interface BookApi
         @ApiResponse(code = 500, message = "Internal server error") //
     })
     @ResponseStatus(value = HttpStatus.OK)
-    BookDTO getBookById(@PathVariable("id") Long id);
+    BookDTO getBookById(@PathVariable("id") Long id) throws ResourceNotFoundException;
 
 
     //------------------------------------------------------------------------------------------------------------------
