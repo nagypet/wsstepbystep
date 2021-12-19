@@ -23,3 +23,5 @@
 ## step08: Making the /authenticate endpoint
 * generating a JWT token
 * signing with the servers private key
+
+## step09: Changing the authentication method of the book controller from Basic to Bearer
