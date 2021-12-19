@@ -73,7 +73,7 @@ public class SwaggerConfig {
 	 */
 	@Bean
 	public Docket api() {
-		return new Docket(DocumentationType.OAS_30) //
+		return new Docket(DocumentationType.SWAGGER_2) //
 				.apiInfo(DEFAULT_API_INFO) //
 				.produces(DEFAULT_PRODUCES_AND_CONSUMES) //
 				.consumes(DEFAULT_PRODUCES_AND_CONSUMES) //

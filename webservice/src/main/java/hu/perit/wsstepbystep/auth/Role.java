@@ -23,5 +23,6 @@ package hu.perit.wsstepbystep.auth;
 public enum Role {
 
     ADMIN,
-    PUBLIC
+    PUBLIC,
+    EMPTY
 }

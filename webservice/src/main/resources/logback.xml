@@ -48,11 +48,20 @@
 	</logger>	
 	<logger name="hu.perit.spvitamin.spring.logging" level="DEBUG" additivity="false">
 		<appender-ref ref="application-message"/>
-	</logger>		
+	</logger>
+	<logger name="hu.perit.spvitamin.spring.httplogging" level="INFO" additivity="false">
+		<appender-ref ref="application-message"/>
+	</logger>
 	<logger name="hu.perit.spvitamin.data.dynamicdatasource" level="INFO" additivity="false">
 		<appender-ref ref="application-message"/>
 	</logger>
-	<logger name="hu.perit.spvitamin.spring.auth.filter.securitycontextremover" level="WARN" additivity="false">
+	<logger name="hu.perit.spvitamin.spring.security" level="DEBUG" additivity="false">
+		<appender-ref ref="application-message"/>
+	</logger>
+	<logger name="hu.perit.spvitamin.spring.security.auth.filter" level="DEBUG" additivity="false">
+		<appender-ref ref="application-message"/>
+	</logger>
+	<logger name="hu.perit.spvitamin.spring.security.auth.filter.securitycontextremover" level="INFO" additivity="false">
 		<appender-ref ref="application-message"/>
 	</logger>
 	<logger name="hu.perit.spvitamin.spring.security.ldap" level="DEBUG" additivity="false">

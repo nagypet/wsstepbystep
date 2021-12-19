@@ -16,6 +16,15 @@
 
 package hu.perit.wsstepbystep.auth;
 
+import hu.perit.spvitamin.core.crypto.CryptoUtil;
+import hu.perit.spvitamin.spring.config.LocalUserProperties;
+import hu.perit.spvitamin.spring.config.SecurityProperties;
+import hu.perit.spvitamin.spring.config.SysConfig;
+import hu.perit.spvitamin.spring.security.auth.SimpleHttpSecurityBuilder;
+import hu.perit.spvitamin.spring.security.auth.filter.Role2PermissionMapperFilter;
+import hu.perit.wsstepbystep.rest.api.BookApi;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
@@ -24,14 +33,9 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.util.StringUtils;
+import org.springframework.security.web.session.SessionManagementFilter;
 
-import hu.perit.spvitamin.core.crypto.CryptoUtil;
-import hu.perit.spvitamin.spring.config.SecurityProperties;
-import hu.perit.spvitamin.spring.config.SysConfig;
-import hu.perit.spvitamin.spring.security.auth.SimpleHttpSecurityBuilder;
-import hu.perit.wsstepbystep.rest.api.BookApi;
-import lombok.extern.slf4j.Slf4j;
+import java.util.Map;
 
 /**
  * #know-how:simple-httpsecurity-builder
@@ -43,14 +47,16 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class WebSecurityConfig
 {
-
     /*
      * ============== Order(1) =========================================================================================
      */
     @Configuration
     @Order(1)
+    @RequiredArgsConstructor
     public static class Order1 extends WebSecurityConfigurerAdapter
     {
+        private final LocalUserProperties localUserProperties;
+        private final PasswordEncoder passwordEncoder;
 
         /**
          * This is a global configuration, will be applied to all oder configurer adapters
@@ -63,27 +69,29 @@ public class WebSecurityConfig
         {
             SecurityProperties securityProperties = SysConfig.getSecurityProperties();
 
-            // Admin user
-            PasswordEncoder passwordEncoder = getApplicationContext().getBean(PasswordEncoder.class);
-            if (StringUtils.hasText(securityProperties.getAdminUserName()) && !"disabled".equals(securityProperties.getAdminUserName()))
+            // Local users for test reasons
+            for (Map.Entry<String, LocalUserProperties.User> userEntry : localUserProperties.getLocaluser().entrySet())
             {
-                CryptoUtil crypto = new CryptoUtil();
-                auth.inMemoryAuthentication() //
-                    .withUser(securityProperties.getAdminUserName()) //
-                    .password(passwordEncoder.encode(
-                        crypto.decrypt(SysConfig.getCryptoProperties().getSecret(), securityProperties.getAdminUserEncryptedPassword()))) //
-                    .authorities("ROLE_" + Role.ADMIN.name(), "ROLE_" + Role.PUBLIC.name());
-            }
-            else
-            {
-                log.warn("admin user is disabled!");
-            }
 
-            // A public user
-            auth.inMemoryAuthentication() //
-                .withUser("user") //
-                .password(passwordEncoder.encode("user")) //
-                .authorities("ROLE_" + Role.PUBLIC.name());
+                log.warn(String.format("local user name: '%s'", userEntry.getKey()));
+
+                String password = null;
+                if (userEntry.getValue().getEncryptedPassword() != null)
+                {
+                    CryptoUtil crypto = new CryptoUtil();
+
+                    password = crypto.decrypt(SysConfig.getCryptoProperties().getSecret(), userEntry.getValue().getEncryptedPassword());
+                }
+                else
+                {
+                    password = userEntry.getValue().getPassword();
+                }
+
+                auth.inMemoryAuthentication() //
+                        .withUser(userEntry.getKey()) //
+                        .password(passwordEncoder.encode(password)) //
+                        .authorities("ROLE_" + Role.EMPTY.name());
+            }
         }
 
 
@@ -91,8 +99,10 @@ public class WebSecurityConfig
         protected void configure(HttpSecurity http) throws Exception
         {
             SimpleHttpSecurityBuilder.newInstance(http) //
-                .scope(BookApi.BASE_URL_BOOKS + "/**") //
-                .basicAuth(Role.PUBLIC.name());
+                    .scope(BookApi.BASE_URL_BOOKS + "/**") //
+                    .basicAuth(Role.PUBLIC.name());
+
+            http.addFilterAfter(new Role2PermissionMapperFilter(), SessionManagementFilter.class);
         }
     }
 }
