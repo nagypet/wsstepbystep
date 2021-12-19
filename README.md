@@ -19,3 +19,7 @@
 ## step06: Security 1
 
 ## step07: Security with roles and permissions
+
+## step08: Making the /authenticate endpoint
+* generating a JWT token
+* signing with the servers private key

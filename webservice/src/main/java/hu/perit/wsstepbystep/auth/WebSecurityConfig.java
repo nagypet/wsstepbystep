@@ -20,6 +20,7 @@ import hu.perit.spvitamin.core.crypto.CryptoUtil;
 import hu.perit.spvitamin.spring.config.LocalUserProperties;
 import hu.perit.spvitamin.spring.config.SecurityProperties;
 import hu.perit.spvitamin.spring.config.SysConfig;
+import hu.perit.spvitamin.spring.rest.api.AuthApi;
 import hu.perit.spvitamin.spring.security.auth.SimpleHttpSecurityBuilder;
 import hu.perit.spvitamin.spring.security.auth.filter.Role2PermissionMapperFilter;
 import hu.perit.wsstepbystep.rest.api.BookApi;
@@ -100,10 +101,15 @@ public class WebSecurityConfig
         protected void configure(HttpSecurity http) throws Exception
         {
             SimpleHttpSecurityBuilder.newInstance(http) //
-                .scope(BookApi.BASE_URL_BOOKS + "/**") //
-                    .authorizeRequests() //
-                    .antMatchers(HttpMethod.GET).hasAuthority(Permissions.BOOK_READ_ACCESS.name()) //
-                    .anyRequest().hasAuthority(Permissions.BOOK_WRITE_ACCESS.name());
+                .scope( //
+                    AuthApi.BASE_URL_AUTHENTICATE + "/**", //
+                    BookApi.BASE_URL_BOOKS + "/**" //
+                ) //
+                .authorizeRequests() //
+                .antMatchers(AuthApi.BASE_URL_AUTHENTICATE + "/**").fullyAuthenticated() //
+                .antMatchers(HttpMethod.GET, BookApi.BASE_URL_BOOKS + "/**").hasAuthority(Permissions.BOOK_READ_ACCESS.name()) //
+                .antMatchers(BookApi.BASE_URL_BOOKS + "/**").hasAuthority(Permissions.BOOK_WRITE_ACCESS.name()) //
+                .anyRequest().denyAll();
 
             SimpleHttpSecurityBuilder.afterAuthorization(http).basicAuth();
 
