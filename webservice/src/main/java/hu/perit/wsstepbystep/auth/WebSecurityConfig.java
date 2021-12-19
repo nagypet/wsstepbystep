@@ -28,6 +28,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -99,8 +100,12 @@ public class WebSecurityConfig
         protected void configure(HttpSecurity http) throws Exception
         {
             SimpleHttpSecurityBuilder.newInstance(http) //
-                    .scope(BookApi.BASE_URL_BOOKS + "/**") //
-                    .basicAuth(Role.PUBLIC.name());
+                .scope(BookApi.BASE_URL_BOOKS + "/**") //
+                    .authorizeRequests() //
+                    .antMatchers(HttpMethod.GET).hasAuthority(Permissions.BOOK_READ_ACCESS.name()) //
+                    .anyRequest().hasAuthority(Permissions.BOOK_WRITE_ACCESS.name());
+
+            SimpleHttpSecurityBuilder.afterAuthorization(http).basicAuth();
 
             http.addFilterAfter(new Role2PermissionMapperFilter(), SessionManagementFilter.class);
         }
