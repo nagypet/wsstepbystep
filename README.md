@@ -24,7 +24,7 @@ What is this project all about? Step by step, I show you how to do a production-
 * step18: JPA auditing
 * step19: Structuring property files properly
 * step20: Improving the health endpoint
-* step21: Improving the health endpoint even further
+* step21: merged with step20
 * step22: Monitoring - creating an application specific monitoring endpoint
 * step23: Installing Prometheus and Grafana
 
@@ -32,8 +32,6 @@ What is this project all about? Step by step, I show you how to do a production-
 # Branches
 
 ## step01: empty project frame
-
-Please git-clone the spvitamin project in your project root folder.
 
 ## step02: REST API 
 * empty CRUD operations in the book controller
