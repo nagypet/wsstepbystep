@@ -1,7 +1,4 @@
 package hu.perit.wsstepbystep.db.bookstore.table;
-package hu.perit.wsstepbystep.db.bookstore.table;
-
-import java.time.LocalDateTime;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -53,8 +50,8 @@ public abstract class BaseEntity
     public int hashCode()
     {
         return new HashCodeBuilder() //
-            .append(this.getId()) //
-            .hashCode();
+                .append(this.getId()) //
+                .hashCode();
     }
 
 
@@ -76,7 +73,7 @@ public abstract class BaseEntity
         BaseEntity other = (BaseEntity) obj;
 
         return new EqualsBuilder() //
-            .append(this.getId(), other.getId()).isEquals();
+                .append(this.getId(), other.getId()).isEquals();
     }
 
 }

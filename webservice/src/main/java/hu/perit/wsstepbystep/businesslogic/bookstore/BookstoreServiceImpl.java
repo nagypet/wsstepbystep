@@ -1,30 +1,15 @@
 package hu.perit.wsstepbystep.businesslogic.bookstore;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
-
-import javax.persistence.LockModeType;
-
-import org.modelmapper.Conditions;
-import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.repository.Lock;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import hu.perit.spvitamin.core.typehelpers.LongUtils;
 import hu.perit.spvitamin.spring.exception.ResourceNotFoundException;
 import hu.perit.webservice.rest.model.AuthorWithBooksDTO;
 import hu.perit.webservice.rest.model.BookDTO;
 import hu.perit.webservice.rest.model.BookParams;
 import hu.perit.wsstepbystep.businesslogic.api.BookstoreService;
-import hu.perit.wsstepbystep.db.postgres.repo.AuthorRepo;
-import hu.perit.wsstepbystep.db.postgres.repo.BookRepo;
-import hu.perit.wsstepbystep.db.postgres.table.AuthorEntity;
-import hu.perit.wsstepbystep.db.postgres.table.BookEntity;
+import hu.perit.wsstepbystep.db.bookstore.repo.AuthorRepo;
+import hu.perit.wsstepbystep.db.bookstore.repo.BookRepo;
+import hu.perit.wsstepbystep.db.bookstore.table.AuthorEntity;
+import hu.perit.wsstepbystep.db.bookstore.table.BookEntity;
 import org.modelmapper.Conditions;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,14 +21,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
-import hu.perit.wsstepbystep.db.bookstore.repo.AuthorRepo;
-import hu.perit.wsstepbystep.db.bookstore.repo.BookRepo;
-import hu.perit.wsstepbystep.db.bookstore.table.AuthorEntity;
-import hu.perit.wsstepbystep.db.bookstore.table.BookEntity;
-import hu.perit.wsstepbystep.db.bookstore.repo.AuthorRepo;
-import hu.perit.wsstepbystep.db.bookstore.repo.BookRepo;
-import hu.perit.wsstepbystep.db.bookstore.table.AuthorEntity;
-import hu.perit.wsstepbystep.db.bookstore.table.BookEntity;
 
 @Service
 public class BookstoreServiceImpl implements BookstoreService

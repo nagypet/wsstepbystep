@@ -66,3 +66,18 @@ ALTER TABLE bookstore.author
 		updatedby character varying(255),
 		updatedat datetime
 ';
+
+execute l 'Altering table book';
+execute ddl '
+ALTER TABLE bookstore.book
+	ADD
+        rec_version bigint DEFAULT 0 NOT NULL
+';
+
+execute l 'Altering table author';
+execute ddl '
+ALTER TABLE bookstore.author
+	ADD
+        rec_version bigint DEFAULT 0 NOT NULL
+';
+
