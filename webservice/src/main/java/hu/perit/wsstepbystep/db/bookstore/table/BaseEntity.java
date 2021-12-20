@@ -1,4 +1,7 @@
 package hu.perit.wsstepbystep.db.bookstore.table;
+package hu.perit.wsstepbystep.db.bookstore.table;
+
+import java.time.LocalDateTime;
 
 import lombok.Getter;
 import lombok.Setter;
