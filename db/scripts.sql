@@ -34,6 +34,7 @@ CREATE TABLE IF NOT EXISTS bookstore.book
     date_issued date,
     pages integer,
     title character varying(255) COLLATE pg_catalog."default",
+    ADD COLUMN rec_version bigint DEFAULT 0 NOT NULL,
     CONSTRAINT book_pkey PRIMARY KEY (book_id)
 );
 
@@ -42,6 +43,7 @@ CREATE TABLE IF NOT EXISTS bookstore.author
 (
     author_id bigint NOT NULL DEFAULT nextval('bookstore.author_author_id_seq'::regclass),
     name character varying(255) COLLATE pg_catalog."default",
+    ADD COLUMN rec_version bigint DEFAULT 0 NOT NULL,
     CONSTRAINT author_pkey PRIMARY KEY (author_id),
     CONSTRAINT author_ix_name UNIQUE (name)
 );
@@ -61,3 +63,15 @@ CREATE TABLE IF NOT EXISTS bookstore.bookxauthor
         ON UPDATE NO ACTION
         ON DELETE NO ACTION
 );
+
+
+---------------------------------------------------------------------------------------------------------------------
+-- Update for step 16
+---------------------------------------------------------------------------------------------------------------------
+ALTER TABLE bookstore.book
+    ADD COLUMN rec_version bigint DEFAULT 0 NOT NULL
+;
+
+ALTER TABLE bookstore.author
+    ADD COLUMN rec_version bigint DEFAULT 0 NOT NULL
+;

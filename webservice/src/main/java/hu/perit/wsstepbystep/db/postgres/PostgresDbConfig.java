@@ -70,7 +70,7 @@ public class PostgresDbConfig
 
     @Primary
     @Bean(name = DATASOURCE)
-    @DependsOn("springContext")
+    @DependsOn("SpvitaminSpringContext")
     public DataSource dataSource()
     {
         log.debug(String.format("creating DataSource for '%s'", PERSISTENCE_UNIT));

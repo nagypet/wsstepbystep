@@ -15,4 +15,5 @@ public class BookDTO
     private Set<AuthorDTO> authors;
     private Integer pages;
     private LocalDate dateIssued;
+    private Long recVersion;
 }

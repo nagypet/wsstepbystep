@@ -1,19 +1,5 @@
 package hu.perit.wsstepbystep.businesslogic.bookstore;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
-
-import javax.persistence.LockModeType;
-
-import org.modelmapper.Conditions;
-import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.repository.Lock;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import hu.perit.spvitamin.core.typehelpers.LongUtils;
 import hu.perit.spvitamin.spring.exception.ResourceNotFoundException;
@@ -25,6 +11,17 @@ import hu.perit.wsstepbystep.db.postgres.repo.AuthorRepo;
 import hu.perit.wsstepbystep.db.postgres.repo.BookRepo;
 import hu.perit.wsstepbystep.db.postgres.table.AuthorEntity;
 import hu.perit.wsstepbystep.db.postgres.table.BookEntity;
+import org.modelmapper.Conditions;
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class BookstoreServiceImpl implements BookstoreService
@@ -43,8 +40,8 @@ public class BookstoreServiceImpl implements BookstoreService
     {
         List<BookEntity> bookEntities = this.bookRepo.findAll();
         return bookEntities.stream() //
-            .map(be -> mapBookEntity2DTO(be)) //
-            .collect(Collectors.toList());
+                .map(be -> mapBookEntity2DTO(be)) //
+                .collect(Collectors.toList());
     }
 
 
@@ -76,14 +73,13 @@ public class BookstoreServiceImpl implements BookstoreService
     // createBook
     //------------------------------------------------------------------------------------------------------------------
     @Override
+    @Transactional
     public long createBook(BookParams bookParams)
     {
         return createOrUpdateBookEntity(null, bookParams);
     }
 
 
-    @Transactional
-    @Lock(LockModeType.PESSIMISTIC_WRITE)
     public long createOrUpdateBookEntity(BookEntity bookEntityInput, BookParams bookParams)
     {
         ModelMapper modelMapper = new ModelMapper();
@@ -107,14 +103,17 @@ public class BookstoreServiceImpl implements BookstoreService
         {
             // First we save the authors without id
             List<AuthorEntity> newAuthorsToSave = bookParams.getAuthors().stream() //
-                .filter(a -> LongUtils.isBlank(a.getId())) //
-                .map(dto -> modelMapper.map(dto, AuthorEntity.class)).collect(Collectors.toList());
+                    .filter(a -> LongUtils.isBlank(a.getId())) //
+                    .map(dto -> modelMapper.map(dto, AuthorEntity.class)).collect(Collectors.toList());
             List<AuthorEntity> newAuthorEntities = this.authorRepo.saveAll(newAuthorsToSave);
 
             // Now gather authors with id
-            List<AuthorEntity> existingAuthorEntities = bookParams.getAuthors().stream() //
-                .filter(a -> LongUtils.isNotBlank(a.getId())) //
-                .map(dto -> modelMapper.map(dto, AuthorEntity.class)).collect(Collectors.toList());
+            List<Long> authorIds = bookParams.getAuthors().stream() //
+                    .filter(a -> LongUtils.isNotBlank(a.getId())) //
+                    .map(dto -> dto.getId())
+                    .distinct()
+                    .collect(Collectors.toList());
+            List<AuthorEntity> existingAuthorEntities = this.authorRepo.findAllById(authorIds);
 
             Set<AuthorEntity> authorEntities = new HashSet<>();
             authorEntities.addAll(existingAuthorEntities);
@@ -140,6 +139,7 @@ public class BookstoreServiceImpl implements BookstoreService
     // updateBook
     //------------------------------------------------------------------------------------------------------------------
     @Override
+    @Transactional
     public void updateBook(Long id, BookParams bookParams) throws ResourceNotFoundException
     {
         Optional<BookEntity> byId = this.bookRepo.findById(id);
@@ -176,8 +176,8 @@ public class BookstoreServiceImpl implements BookstoreService
     {
         List<AuthorEntity> authorEntities = this.authorRepo.findAll();
         return authorEntities.stream() //
-            .map(ae -> mapAuthorEntity2DTO(ae)) //
-            .collect(Collectors.toList());
+                .map(ae -> mapAuthorEntity2DTO(ae)) //
+                .collect(Collectors.toList());
     }
 
 

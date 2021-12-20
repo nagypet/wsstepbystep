@@ -9,4 +9,5 @@ public class AuthorDTO
 {
     private Long id;
     private String name;
+    private Long recVersion;
 }
