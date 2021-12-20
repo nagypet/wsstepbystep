@@ -29,9 +29,13 @@ import java.net.URI;
 import java.time.LocalDate;
 import java.util.List;
 import hu.perit.wsstepbystep.config.Constants;
+import hu.perit.webservice.rest.model.BookDTO;
+import hu.perit.webservice.rest.model.BookParams;
+import hu.perit.webservice.rest.model.ResponseUri;
+import hu.perit.wsstepbystep.businesslogic.api.BookstoreService;
+import hu.perit.wsstepbystep.config.Constants;
 
 @RestController
-@Slf4j
 public class BookController extends AbstractInterfaceLogger implements BookApi
 {
 
