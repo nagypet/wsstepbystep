@@ -16,21 +16,20 @@
 
 package hu.perit.wsstepbystep.integration;
 
+import feign.auth.BasicAuthRequestInterceptor;
+import hu.perit.spvitamin.core.StackTracer;
+import hu.perit.spvitamin.spring.auth.AuthorizationToken;
+import hu.perit.spvitamin.spring.config.LocalUserProperties;
+import hu.perit.spvitamin.spring.config.SpringContext;
+import hu.perit.spvitamin.spring.config.SysConfig;
+import hu.perit.spvitamin.spring.feignclients.SimpleFeignClientBuilder;
+import hu.perit.webservice.rest.client.WebserviceClient;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.test.context.ActiveProfiles;
-
-import feign.auth.BasicAuthRequestInterceptor;
-import hu.perit.spvitamin.core.StackTracer;
-import hu.perit.spvitamin.core.crypto.CryptoUtil;
-import hu.perit.spvitamin.spring.auth.AuthorizationToken;
-import hu.perit.spvitamin.spring.config.SecurityProperties;
-import hu.perit.spvitamin.spring.config.SysConfig;
-import hu.perit.spvitamin.spring.feignclients.SimpleFeignClientBuilder;
-import hu.perit.webservice.rest.client.WebserviceClient;
-import lombok.extern.slf4j.Slf4j;
 
 /**
  * @author Peter Nagy
@@ -41,7 +40,6 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 class AuthApiIntegrationTest
 {
-
     @Test
     void testRestEndpoint_withCorrectCredentials_whenUsing_DaoAuthenticationProvider()
     {
@@ -50,14 +48,13 @@ class AuthApiIntegrationTest
 
         try
         {
-            SecurityProperties securityProperties = SysConfig.getSecurityProperties();
-            CryptoUtil crypto = new CryptoUtil();
+            LocalUserProperties localUserProperties = SpringContext.getBean(LocalUserProperties.class);
 
             WebserviceClient webserviceClient = SimpleFeignClientBuilder.newInstance() //
-                .requestInterceptor(new BasicAuthRequestInterceptor( //
-                    securityProperties.getAdminUserName(),
-                    crypto.decrypt(SysConfig.getCryptoProperties().getSecret(), securityProperties.getAdminUserEncryptedPassword()))) //
-                .build(WebserviceClient.class, SysConfig.getServerProperties().getServiceUrl());
+                    .requestInterceptor(new BasicAuthRequestInterceptor( //
+                            "admin",
+                            localUserProperties.getLocaluser().get("admin").getPassword())) //
+                    .build(WebserviceClient.class, SysConfig.getServerProperties().getServiceUrl());
 
             // Calling the authentication endpoint
             AuthorizationToken authentication = webserviceClient.authenticate(null);
@@ -78,7 +75,7 @@ class AuthApiIntegrationTest
         log.debug("testRestEndpoint_withIncorrectUsername_whenUsing_DaoAuthenticationProvider()");
 
         WebserviceClient webserviceClient = SimpleFeignClientBuilder.newInstance().requestInterceptor(
-            new BasicAuthRequestInterceptor("valami_nem_letezo_username", "password")).build(WebserviceClient.class,
+                new BasicAuthRequestInterceptor("valami_nem_letezo_username", "password")).build(WebserviceClient.class,
                 SysConfig.getServerProperties().getServiceUrl());
 
         // Calling the authentication endpoint
@@ -93,7 +90,7 @@ class AuthApiIntegrationTest
         log.debug("testRestEndpoint_withIncorrectPassword_whenUsing_DaoAuthenticationProvider()");
 
         WebserviceClient webserviceClient = SimpleFeignClientBuilder.newInstance().requestInterceptor(
-            new BasicAuthRequestInterceptor("admin", "wrong_password")).build(WebserviceClient.class,
+                new BasicAuthRequestInterceptor("admin", "wrong_password")).build(WebserviceClient.class,
                 SysConfig.getServerProperties().getServiceUrl());
 
         // Calling the authentication endpoint
