@@ -16,17 +16,17 @@
 
 package hu.perit.webservice.rest.client;
 
-import java.util.List;
-
-import org.springframework.web.bind.annotation.RequestBody;
-
 import feign.Headers;
 import feign.Param;
 import feign.RequestLine;
 import hu.perit.spvitamin.spring.auth.AuthorizationToken;
+import hu.perit.webservice.rest.model.BookCreateParams;
 import hu.perit.webservice.rest.model.BookDTO;
-import hu.perit.webservice.rest.model.BookParams;
+import hu.perit.webservice.rest.model.BookUpdateParams;
 import hu.perit.webservice.rest.model.ResponseUri;
+import org.springframework.web.bind.annotation.RequestBody;
+
+import java.util.List;
 
 /**
  * @author Peter Nagy
@@ -67,7 +67,7 @@ public interface WebserviceClient
     //------------------------------------------------------------------------------------------------------------------
     @RequestLine("POST " + BASE_URL_BOOKS)
     @Headers({"Content-Type: application/json"})
-    ResponseUri createBook(@RequestBody BookParams bookParams);
+    ResponseUri createBook(@RequestBody BookCreateParams bookParams);
 
 
     //------------------------------------------------------------------------------------------------------------------
@@ -75,7 +75,7 @@ public interface WebserviceClient
     //------------------------------------------------------------------------------------------------------------------
     @RequestLine("PUT " + BASE_URL_BOOKS + "/{id}")
     @Headers({"Content-Type: application/json"})
-    void updateBook(@Param("id") long userId, @RequestBody BookParams bookParams);
+    void updateBook(@Param("id") long userId, @RequestBody BookUpdateParams bookParams);
 
 
     //------------------------------------------------------------------------------------------------------------------

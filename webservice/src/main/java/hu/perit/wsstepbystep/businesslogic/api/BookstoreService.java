@@ -1,11 +1,11 @@
 package hu.perit.wsstepbystep.businesslogic.api;
 
-import java.util.List;
-
 import hu.perit.spvitamin.spring.exception.ResourceNotFoundException;
 import hu.perit.webservice.rest.model.AuthorWithBooksDTO;
 import hu.perit.webservice.rest.model.BookDTO;
-import hu.perit.webservice.rest.model.BookParams;
+import hu.perit.wsstepbystep.businesslogic.bookstore.BookParams;
+
+import java.util.List;
 
 public interface BookstoreService
 {

@@ -10,18 +10,19 @@ import java.time.LocalDate;
 import java.util.Set;
 
 @Data
-public class BookParams
+public class BookUpdateParams
 {
     @Size(min = 1, max = 100)
     private String title;
 
-    @NotNull
     private Set<AuthorParams> authors;
-    
+
     @Min(0)
     @Max(Integer.MAX_VALUE)
     private Integer pages;
-    
-    @NotNull
+
     private LocalDate dateIssued;
+
+    @NotNull
+    private Long recVersion;
 }

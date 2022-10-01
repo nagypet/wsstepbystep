@@ -20,7 +20,7 @@ repositories {
 }
 
 ext {
-    set('spvitaminVersion', '1.3.4-RELEASE')
+    set('spvitaminVersion', '1.7.0-RELEASE')
     set('springCloudVersion', "2020.0.5")
 }
 
@@ -88,8 +88,9 @@ dependencies {
     implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
     implementation group: 'com.netflix.feign', name: 'feign-jackson', version: '8.18.0'
 
-    // ModelMapper
-    implementation group: 'org.modelmapper.extensions', name: 'modelmapper-spring', version: '2.3.5'
+    // Mapstruct
+    implementation group: 'org.mapstruct', name: 'mapstruct', version: '1.4.2.Final'
+    annotationProcessor group: 'org.mapstruct', name: 'mapstruct-processor', version: '1.4.2.Final'
 
     // Micrometer Prometheus plugin
     implementation group: 'io.micrometer', name: 'micrometer-registry-prometheus', version: '1.5.3'

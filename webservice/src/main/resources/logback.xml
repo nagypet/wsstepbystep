@@ -44,10 +44,7 @@
 	<!-- flooding the log -->
 	<logger name="com.netflix.discovery" level="OFF"/>
 
-	<!-- Application specific loggers -->
-	<logger name="hu.perit.wsstepbystep" level="DEBUG" additivity="false">
-		<appender-ref ref="application-message"/>
-	</logger>	
+	<!-- Spvitamin loggers -->
 	<logger name="hu.perit.spvitamin.core.took" level="DEBUG" additivity="false">
 		<appender-ref ref="application-message"/>
 	</logger>	
@@ -58,6 +55,9 @@
 		<appender-ref ref="application-message"/>
 	</logger>
 	<logger name="hu.perit.spvitamin.spring.httplogging" level="INFO" additivity="false">
+		<appender-ref ref="application-message"/>
+	</logger>
+	<logger name="hu.perit.spvitamin.spring.restmethodlogger" level="DEBUG" additivity="false">
 		<appender-ref ref="application-message"/>
 	</logger>
 	<logger name="hu.perit.spvitamin.data.dynamicdatasource" level="INFO" additivity="false">
@@ -78,7 +78,13 @@
 	<logger name="hu.perit.spvitamin.spring.config" level="DEBUG" additivity="false">
 		<appender-ref ref="application-message"/>
 	</logger>
-	
+
+	<!-- Application specific loggers -->
+	<logger name="hu.perit.wsstepbystep" level="DEBUG" additivity="false">
+		<appender-ref ref="application-message"/>
+	</logger>
+
+
 	<!--
 	<logger name="com.netflix.discovery" level="OFF"/>
 	<logger name="org.springframework.transaction" level="DEBUG"/>
